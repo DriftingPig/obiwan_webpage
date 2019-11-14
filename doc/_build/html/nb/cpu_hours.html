@@ -1,0 +1,1724 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>time vs. Tractor stage &#8212; obiwan 1.2.0 documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default ">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          Obiwan</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.2.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../api.html">API</a></li>
+                <li><a href="../tutorials.html">Tutorials</a></li>
+                <li><a href="../deeplearning.html">Deep Learning</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Pages <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">This Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">time vs. Tractor stage</a><ul>
+<li><a class="reference internal" href="#Tuning-cores=3,4,6">Tuning cores=3,4,6</a></li>
+<li><a class="reference internal" href="#Tuning-nobj=500,1000,15000">Tuning nobj=500,1000,15000</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#SLURM-sacct">SLURM sacct</a></li>
+<li><a class="reference internal" href="#Parse-log-file-for-timings">Parse log file for timings</a></li>
+<li><a class="reference internal" href="#4x-number-sources-takes-~-3x-as-long,-so-beneficial-to-use-more-sources">4x number sources takes ~ 3x as long, so beneficial to use more sources</a><ul>
+<li><a class="reference internal" href="#Try-1000-sources">Try 1000 sources</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#number-of-tractor-tables-a-given-slurm-file-was-able-to-make">number of tractor tables a given slurm file was able to make</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 9ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+</style>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
+
+
+<span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+</div>
+</div>
+<div class="section" id="time-vs.-Tractor-stage">
+<h1>time vs. Tractor stage<a class="headerlink" href="#time-vs.-Tractor-stage" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="Tuning-cores=3,4,6">
+<h2>Tuning cores=3,4,6<a class="headerlink" href="#Tuning-cores=3,4,6" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">df</span><span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;/Users/kaylan1/Downloads/cores_edison_14.txt&#39;</span><span class="p">,</span><span class="n">sep</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[7]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>nobj</th>
+      <th>brick</th>
+      <th>rsdir</th>
+      <th>frac_injected</th>
+      <th>cores</th>
+      <th>tims</th>
+      <th>mask_junk</th>
+      <th>srcs</th>
+      <th>fitblobs</th>
+      <th>coadds</th>
+      <th>writecat</th>
+      <th>total_sec</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1000</td>
+      <td>1341p015</td>
+      <td>0</td>
+      <td>0.996</td>
+      <td>3</td>
+      <td>94.2</td>
+      <td>14.7</td>
+      <td>84.1</td>
+      <td>2690.5</td>
+      <td>270.6</td>
+      <td>1.5</td>
+      <td>3053.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1000</td>
+      <td>1341p015</td>
+      <td>1000</td>
+      <td>0.997</td>
+      <td>3</td>
+      <td>97.5</td>
+      <td>14.9</td>
+      <td>86.2</td>
+      <td>2714.7</td>
+      <td>257.0</td>
+      <td>0.6</td>
+      <td>3068.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1000</td>
+      <td>1423p167</td>
+      <td>0</td>
+      <td>0.996</td>
+      <td>3</td>
+      <td>129.7</td>
+      <td>17.7</td>
+      <td>90.1</td>
+      <td>4386.3</td>
+      <td>317.5</td>
+      <td>1.2</td>
+      <td>4823.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1000</td>
+      <td>1423p167</td>
+      <td>1000</td>
+      <td>0.996</td>
+      <td>3</td>
+      <td>130.0</td>
+      <td>17.9</td>
+      <td>91.3</td>
+      <td>4071.3</td>
+      <td>313.4</td>
+      <td>0.7</td>
+      <td>4506.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1000</td>
+      <td>1416p320</td>
+      <td>0</td>
+      <td>0.995</td>
+      <td>3</td>
+      <td>112.8</td>
+      <td>16.0</td>
+      <td>88.2</td>
+      <td>3812.0</td>
+      <td>329.5</td>
+      <td>0.6</td>
+      <td>4215.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">avg</span><span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;cores&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">std</span><span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;cores&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">avg</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">avg</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span><span class="s1">&#39;total_sec&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">avg</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">avg</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">4</span><span class="p">,</span><span class="s1">&#39;total_sec&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="k">print</span><span class="p">(</span><span class="n">avg</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">avg</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span><span class="s1">&#39;total_sec&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">avg</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">avg</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">6</span><span class="p">,</span><span class="s1">&#39;total_sec&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">avg</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+0.969577362157
+1.58120419885
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[14]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>cores</th>
+      <th>nobj</th>
+      <th>rsdir</th>
+      <th>frac_injected</th>
+      <th>tims</th>
+      <th>mask_junk</th>
+      <th>srcs</th>
+      <th>fitblobs</th>
+      <th>coadds</th>
+      <th>writecat</th>
+      <th>total_sec</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>3</td>
+      <td>1000</td>
+      <td>500</td>
+      <td>0.995786</td>
+      <td>126.321429</td>
+      <td>17.392857</td>
+      <td>92.157143</td>
+      <td>4132.607143</td>
+      <td>324.664286</td>
+      <td>0.828571</td>
+      <td>4562.000000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>4</td>
+      <td>1000</td>
+      <td>500</td>
+      <td>0.995786</td>
+      <td>119.485714</td>
+      <td>16.892857</td>
+      <td>88.728571</td>
+      <td>4125.085714</td>
+      <td>553.550000</td>
+      <td>1.235714</td>
+      <td>4705.142857</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>6</td>
+      <td>1000</td>
+      <td>500</td>
+      <td>0.995786</td>
+      <td>82.207143</td>
+      <td>16.664286</td>
+      <td>77.585714</td>
+      <td>2541.535714</td>
+      <td>291.057143</td>
+      <td>0.628571</td>
+      <td>2885.142857</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">STAGES</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;tims&#39;</span><span class="p">,</span> <span class="s1">&#39;mask_junk&#39;</span><span class="p">,</span> <span class="s1">&#39;srcs&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;fitblobs&#39;</span><span class="p">,</span> <span class="s1">&#39;coadds&#39;</span><span class="p">,</span> <span class="s1">&#39;writecat&#39;</span><span class="p">]</span>
+<span class="n">STAGES</span><span class="o">+=</span><span class="p">[</span><span class="s1">&#39;total_sec&#39;</span><span class="p">]</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="kn">as</span> <span class="nn">mpl</span>
+<span class="n">fontsize</span><span class="o">=</span> <span class="mi">15</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.titlesize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fontsize</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.labelsize&#39;</span><span class="p">]</span><span class="o">=</span> <span class="n">fontsize</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.size&#39;</span><span class="p">]</span><span class="o">=</span> <span class="n">fontsize</span>
+
+<span class="n">fig</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">xvals</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">STAGES</span><span class="p">))</span><span class="o">+</span><span class="mi">1</span>
+<span class="k">for</span> <span class="n">core</span><span class="p">,</span><span class="n">jitter</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">],[</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.1</span><span class="p">]):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">xvals</span><span class="o">+</span><span class="n">jitter</span><span class="p">,</span> <span class="n">avg</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">avg</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">core</span><span class="p">,</span><span class="n">STAGES</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mf">60.</span><span class="p">,</span>
+                <span class="n">yerr</span><span class="o">=</span> <span class="n">std</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">avg</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">core</span><span class="p">,</span><span class="n">STAGES</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mf">60.</span><span class="p">,</span>
+                <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;cores=</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">core</span><span class="p">,</span>
+                <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">capsize</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">ms</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span> <span class="c1">#loc=&#39;lower right&#39;,scatterpoints=1)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">xvals</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">STAGES</span><span class="p">,</span><span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+<span class="c1">#ax.set_ylim([1e-3,1e2])</span>
+<span class="n">xlab</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Wall Time (min)&#39;</span><span class="p">)</span>
+<span class="n">ylab</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Tractor Stage&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;time_per_stage_cores.png&#39;</span><span class="p">,</span> <span class="n">bbox_extra_artists</span><span class="o">=</span><span class="p">[</span><span class="n">xlab</span><span class="p">,</span><span class="n">ylab</span><span class="p">],</span>
+            <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="c1">#plt.close()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/nb_cpu_hours_5_0.png" src="../_images/nb_cpu_hours_5_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">STAGES</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;tims&#39;</span><span class="p">,</span> <span class="s1">&#39;mask_junk&#39;</span><span class="p">,</span> <span class="s1">&#39;srcs&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;fitblobs&#39;</span><span class="p">,</span> <span class="s1">&#39;coadds&#39;</span><span class="p">,</span> <span class="s1">&#39;writecat&#39;</span><span class="p">]</span>
+<span class="n">STAGES</span><span class="o">+=</span><span class="p">[</span><span class="s1">&#39;total_sec&#39;</span><span class="p">]</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="kn">as</span> <span class="nn">mpl</span>
+<span class="n">fontsize</span><span class="o">=</span> <span class="mi">15</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.titlesize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fontsize</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.labelsize&#39;</span><span class="p">]</span><span class="o">=</span> <span class="n">fontsize</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.size&#39;</span><span class="p">]</span><span class="o">=</span> <span class="n">fontsize</span>
+
+<span class="n">fig</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">xvals</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">STAGES</span><span class="p">))</span><span class="o">+</span><span class="mi">1</span>
+<span class="k">for</span> <span class="n">core</span><span class="p">,</span><span class="n">jitter</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">],[</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.1</span><span class="p">]):</span>
+    <span class="n">factor</span><span class="o">=</span><span class="n">core</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">xvals</span><span class="o">+</span><span class="n">jitter</span><span class="p">,</span> <span class="n">avg</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">avg</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">core</span><span class="p">,</span><span class="n">STAGES</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mf">60.</span><span class="o">*</span><span class="n">factor</span><span class="p">,</span>
+                <span class="n">yerr</span><span class="o">=</span> <span class="n">std</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">avg</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">core</span><span class="p">,</span><span class="n">STAGES</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mf">60.</span><span class="o">*</span><span class="n">factor</span><span class="p">,</span>
+                <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;cores=</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">core</span><span class="p">,</span>
+                <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">capsize</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">ms</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span> <span class="c1">#loc=&#39;lower right&#39;,scatterpoints=1)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">xvals</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">STAGES</span><span class="p">,</span><span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+<span class="c1">#ax.set_ylim([1e-3,1e2])</span>
+<span class="n">xlab</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Wall Time (min) * Cores&#39;</span><span class="p">)</span>
+<span class="n">ylab</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Tractor Stage&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;time_per_stage_factor_cores.png&#39;</span><span class="p">,</span> <span class="n">bbox_extra_artists</span><span class="o">=</span><span class="p">[</span><span class="n">xlab</span><span class="p">,</span><span class="n">ylab</span><span class="p">],</span>
+            <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="c1">#plt.close()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/nb_cpu_hours_6_0.png" src="../_images/nb_cpu_hours_6_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">avg_3</span><span class="o">=</span> <span class="n">avg</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">avg</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span><span class="n">STAGES</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">avg_6</span><span class="o">=</span> <span class="n">avg</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">avg</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">6</span><span class="p">,</span><span class="n">STAGES</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">std_3</span><span class="o">=</span> <span class="n">std</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">std</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span><span class="n">STAGES</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">std_6</span><span class="o">=</span> <span class="n">std</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">std</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">6</span><span class="p">,</span><span class="n">STAGES</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">N</span><span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">])</span>
+
+<span class="n">stderr_mean_3div6</span><span class="o">=</span> <span class="n">avg_3</span><span class="o">/</span><span class="n">avg_6</span><span class="o">/</span><span class="n">N</span><span class="o">**</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">std_3</span><span class="o">/</span><span class="n">avg_3</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">std_6</span><span class="o">/</span><span class="n">avg_6</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">stderr_mean_3div6</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[ 0.10297278  0.04378457  0.02520948  0.1199864   0.06514703  0.17800607
+  0.11100781]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">STAGES</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;tims&#39;</span><span class="p">,</span> <span class="s1">&#39;mask_junk&#39;</span><span class="p">,</span> <span class="s1">&#39;srcs&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;fitblobs&#39;</span><span class="p">,</span> <span class="s1">&#39;coadds&#39;</span><span class="p">,</span> <span class="s1">&#39;writecat&#39;</span><span class="p">]</span>
+<span class="n">STAGES</span><span class="o">+=</span><span class="p">[</span><span class="s1">&#39;total_sec&#39;</span><span class="p">]</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="kn">as</span> <span class="nn">mpl</span>
+<span class="n">fontsize</span><span class="o">=</span> <span class="mi">15</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.titlesize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fontsize</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.labelsize&#39;</span><span class="p">]</span><span class="o">=</span> <span class="n">fontsize</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.size&#39;</span><span class="p">]</span><span class="o">=</span> <span class="n">fontsize</span>
+
+<span class="n">fig</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">xvals</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">STAGES</span><span class="p">))</span><span class="o">+</span><span class="mi">1</span>
+<span class="c1">##</span>
+<span class="n">factor</span><span class="o">=</span><span class="n">core</span>
+<span class="c1">#ax.plot(xvals,avg.loc[avg[&#39;cores&#39;] == 3,STAGES].values[0]/avg.loc[avg[&#39;cores&#39;] == 6,STAGES].values[0],</span>
+<span class="c1">#        label=&#39;cores 3/6&#39;,lw=2,ms=10,ls=&#39;--&#39;)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">xvals</span><span class="p">,</span>
+            <span class="n">avg</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">avg</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span><span class="n">STAGES</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">avg</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">avg</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">6</span><span class="p">,</span><span class="n">STAGES</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">yerr</span><span class="o">=</span><span class="n">stderr_mean_3div6</span><span class="p">,</span>
+            <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;cores 3/6&#39;</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">ms</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower right&#39;</span><span class="p">,</span><span class="n">scatterpoints</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">xvals</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">STAGES</span><span class="p">,</span><span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+<span class="c1">#ax.set_yscale(&#39;log&#39;)</span>
+<span class="c1">#ax.set_ylim([1e-3,1e2])</span>
+<span class="n">xlab</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Wall Time Ratio&#39;</span><span class="p">)</span>
+<span class="n">ylab</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Tractor Stage&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;time_per_stage_ratio_cores.png&#39;</span><span class="p">,</span> <span class="n">bbox_extra_artists</span><span class="o">=</span><span class="p">[</span><span class="n">xlab</span><span class="p">,</span><span class="n">ylab</span><span class="p">],</span>
+            <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="c1">#plt.close()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/nb_cpu_hours_8_0.png" src="../_images/nb_cpu_hours_8_0.png" />
+</div>
+</div>
+</div>
+<div class="section" id="Tuning-nobj=500,1000,15000">
+<h2>Tuning nobj=500,1000,15000<a class="headerlink" href="#Tuning-nobj=500,1000,15000" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [54]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">df</span><span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;/Users/kaylan1/Downloads/nobj_runs.txt&#39;</span><span class="p">,</span><span class="n">sep</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[54]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>nobj</th>
+      <th>brick</th>
+      <th>rsdir</th>
+      <th>frac_injected</th>
+      <th>tims</th>
+      <th>mask_junk</th>
+      <th>srcs</th>
+      <th>fitblobs</th>
+      <th>coadds</th>
+      <th>writecat</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1000</td>
+      <td>1341p015</td>
+      <td>0</td>
+      <td>0.996</td>
+      <td>85.7</td>
+      <td>13.7</td>
+      <td>80.2</td>
+      <td>2467.5</td>
+      <td>260.4</td>
+      <td>0.5</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1000</td>
+      <td>1341p015</td>
+      <td>1000</td>
+      <td>0.997</td>
+      <td>88.3</td>
+      <td>14.8</td>
+      <td>83.9</td>
+      <td>2580.5</td>
+      <td>272.2</td>
+      <td>0.6</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1000</td>
+      <td>1423p167</td>
+      <td>0</td>
+      <td>0.996</td>
+      <td>119.5</td>
+      <td>17.8</td>
+      <td>89.7</td>
+      <td>4127.7</td>
+      <td>315.2</td>
+      <td>0.6</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1000</td>
+      <td>1423p167</td>
+      <td>1000</td>
+      <td>0.996</td>
+      <td>119.5</td>
+      <td>17.4</td>
+      <td>89.1</td>
+      <td>3765.2</td>
+      <td>315.9</td>
+      <td>0.9</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1000</td>
+      <td>1416p320</td>
+      <td>0</td>
+      <td>0.995</td>
+      <td>101.2</td>
+      <td>15.5</td>
+      <td>83.0</td>
+      <td>3528.3</td>
+      <td>325.7</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [55]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">avg</span><span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;nobj&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">std</span><span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;nobj&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">avg</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[55]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>nobj</th>
+      <th>rsdir</th>
+      <th>frac_injected</th>
+      <th>tims</th>
+      <th>mask_junk</th>
+      <th>srcs</th>
+      <th>fitblobs</th>
+      <th>coadds</th>
+      <th>writecat</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>500</td>
+      <td>500</td>
+      <td>0.996000</td>
+      <td>88.092593</td>
+      <td>18.388889</td>
+      <td>91.711111</td>
+      <td>1911.592593</td>
+      <td>330.348148</td>
+      <td>0.429630</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1000</td>
+      <td>500</td>
+      <td>0.995722</td>
+      <td>120.594444</td>
+      <td>18.600000</td>
+      <td>92.550000</td>
+      <td>4517.027778</td>
+      <td>337.855556</td>
+      <td>1.394444</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1500</td>
+      <td>0</td>
+      <td>0.997333</td>
+      <td>162.677778</td>
+      <td>18.955556</td>
+      <td>94.155556</td>
+      <td>6219.966667</td>
+      <td>353.400000</td>
+      <td>0.911111</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">std</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">avg</span><span class="p">[</span><span class="s1">&#39;nobj&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">nobj</span><span class="p">,</span><span class="n">STAGES</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[17]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>array([  1.34755313e+01,   3.47721521e+00,   7.73261491e+00,
+         1.10847632e+03,   4.63918790e+01,   6.68800005e-02])
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[24]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>array([1, 0, 1, 0, 1, 1, 1, 1, 0, 1])
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [56]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">STAGES</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;tims&#39;</span><span class="p">,</span> <span class="s1">&#39;mask_junk&#39;</span><span class="p">,</span> <span class="s1">&#39;srcs&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;fitblobs&#39;</span><span class="p">,</span> <span class="s1">&#39;coadds&#39;</span><span class="p">,</span> <span class="s1">&#39;writecat&#39;</span><span class="p">]</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="kn">as</span> <span class="nn">mpl</span>
+<span class="n">fontsize</span><span class="o">=</span> <span class="mi">15</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.titlesize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fontsize</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.labelsize&#39;</span><span class="p">]</span><span class="o">=</span> <span class="n">fontsize</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.size&#39;</span><span class="p">]</span><span class="o">=</span> <span class="n">fontsize</span>
+
+<span class="n">fig</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">xvals</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">STAGES</span><span class="p">))</span><span class="o">+</span><span class="mi">1</span>
+<span class="k">for</span> <span class="n">nobj</span><span class="p">,</span><span class="n">jitter</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="mi">500</span><span class="p">,</span><span class="mi">1000</span><span class="p">,</span><span class="mi">1500</span><span class="p">],[</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.1</span><span class="p">]):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">xvals</span><span class="o">+</span><span class="n">jitter</span><span class="p">,</span> <span class="n">avg</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">avg</span><span class="p">[</span><span class="s1">&#39;nobj&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">nobj</span><span class="p">,</span><span class="n">STAGES</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mf">60.</span><span class="p">,</span>
+                <span class="n">yerr</span><span class="o">=</span> <span class="n">std</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">avg</span><span class="p">[</span><span class="s1">&#39;nobj&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">nobj</span><span class="p">,</span><span class="n">STAGES</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mf">60.</span><span class="p">,</span>
+                <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;nobj=</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">nobj</span><span class="p">,</span>
+                <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">capsize</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">ms</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span> <span class="c1">#loc=&#39;lower right&#39;,scatterpoints=1)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">xvals</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">STAGES</span><span class="p">,</span><span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+<span class="c1">#ax.set_ylim([1e-3,1e2])</span>
+<span class="n">xlab</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Wall Time (min)&#39;</span><span class="p">)</span>
+<span class="n">ylab</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Tractor Stage&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;time_per_stage_nobj.png&#39;</span><span class="p">,</span> <span class="n">bbox_extra_artists</span><span class="o">=</span><span class="p">[</span><span class="n">xlab</span><span class="p">,</span><span class="n">ylab</span><span class="p">],</span>
+            <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="c1">#plt.close()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/nb_cpu_hours_14_0.png" src="../_images/nb_cpu_hours_14_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [57]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># nobj=1500 gets 3x and 1.5x more work done than nobj=500 and 1000</span>
+<span class="n">fig</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">xvals</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">STAGES</span><span class="p">))</span><span class="o">+</span><span class="mi">1</span>
+<span class="k">for</span> <span class="n">nobj</span><span class="p">,</span><span class="n">jitter</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="mi">500</span><span class="p">,</span><span class="mi">1000</span><span class="p">,</span><span class="mi">1500</span><span class="p">],[</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.1</span><span class="p">]):</span>
+    <span class="n">factor</span><span class="o">=</span> <span class="mf">1500.</span><span class="o">/</span><span class="n">nobj</span><span class="o">/</span><span class="n">avg</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">avg</span><span class="p">[</span><span class="s1">&#39;nobj&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">nobj</span><span class="p">,</span><span class="s1">&#39;frac_injected&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">xvals</span><span class="o">+</span><span class="n">jitter</span><span class="p">,</span>
+                <span class="n">avg</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">avg</span><span class="p">[</span><span class="s1">&#39;nobj&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">nobj</span><span class="p">,</span><span class="n">STAGES</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mf">60.</span><span class="o">*</span><span class="n">factor</span><span class="p">,</span>
+                <span class="n">yerr</span><span class="o">=</span> <span class="n">std</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">avg</span><span class="p">[</span><span class="s1">&#39;nobj&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">nobj</span><span class="p">,</span><span class="n">STAGES</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mf">60.</span><span class="o">*</span><span class="n">factor</span><span class="p">,</span>
+                <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;nobj=</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">nobj</span><span class="p">,</span>
+                <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">capsize</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">ms</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span> <span class="c1">#loc=&#39;lower right&#39;,scatterpoints=1)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">xvals</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">STAGES</span><span class="p">,</span><span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+<span class="c1">#ax.set_ylim([1e-3,1e2])</span>
+<span class="n">xlab</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Wall Time (min)&#39;</span><span class="p">)</span>
+<span class="n">ylab</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Tractor Stage&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;time_per_stage_factor_nobj.png&#39;</span><span class="p">,</span> <span class="n">bbox_extra_artists</span><span class="o">=</span><span class="p">[</span><span class="n">xlab</span><span class="p">,</span><span class="n">ylab</span><span class="p">],</span>
+            <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="c1">#plt.close()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/nb_cpu_hours_15_0.png" src="../_images/nb_cpu_hours_15_0.png" />
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="SLURM-sacct">
+<h1>SLURM sacct<a class="headerlink" href="#SLURM-sacct" title="Permalink to this headline">¶</a></h1>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">a</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;HOME&quot;</span><span class="p">],</span><span class="s1">&#39;Downloads&#39;</span><span class="p">,</span><span class="s1">&#39;my_sacct.txt&#39;</span><span class="p">),</span>
+              <span class="n">delim_whitespace</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+              <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;slurm_id&#39;</span><span class="p">,</span><span class="s1">&#39;status&#39;</span><span class="p">,</span><span class="s1">&#39;num_nodes&#39;</span><span class="p">,</span><span class="s1">&#39;time&#39;</span><span class="p">])</span>
+
+
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="s1">&#39;multi_hr&#39;</span><span class="p">,</span><span class="s1">&#39;min&#39;</span><span class="p">,</span><span class="s1">&#39;sec&#39;</span><span class="p">]):</span>
+    <span class="n">a</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;multi_hr&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">len</span><span class="p">()</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[6]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>1    295
+2      1
+Name: multi_hr, dtype: int64
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">hasExtra24</span><span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="s1">&#39;multi_hr&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">len</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span>
+<span class="n">a</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">hasExtra24</span><span class="p">,</span><span class="s1">&#39;multi_hr&#39;</span><span class="p">],</span> <span class="n">a</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">hasExtra24</span><span class="p">,</span><span class="s1">&#39;multi_hr&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[8]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>(196    1-00
+ Name: multi_hr, dtype: object, &#39;00&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;extra_hrs&#39;</span><span class="p">]</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">a</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">hasExtra24</span><span class="p">,</span><span class="s1">&#39;extra_hrs&#39;</span><span class="p">]</span><span class="o">=</span> <span class="mi">24</span><span class="o">*</span><span class="n">a</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">hasExtra24</span><span class="p">,</span><span class="s1">&#39;multi_hr&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">a</span><span class="p">[</span><span class="s1">&#39;extra_hrs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[15]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>0.0     295
+24.0      1
+Name: extra_hrs, dtype: int64
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;hrs&#39;</span><span class="p">]</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="c1"># No 01-05, just 05</span>
+<span class="n">a</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">hasExtra24</span><span class="p">,</span><span class="s1">&#39;hrs&#39;</span><span class="p">]</span><span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">hasExtra24</span><span class="p">,</span><span class="s1">&#39;multi_hr&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="c1"># When 01-05, just take 05</span>
+<span class="n">a</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">hasExtra24</span><span class="p">,</span><span class="s1">&#39;hrs&#39;</span><span class="p">]</span><span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">hasExtra24</span><span class="p">,</span><span class="s1">&#39;multi_hr&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">a</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;hrs&#39;</span><span class="p">]</span> <span class="o">+=</span>  <span class="n">a</span><span class="p">[</span><span class="s1">&#39;extra_hrs&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">a</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">hasExtra24</span><span class="p">,</span><span class="s1">&#39;hrs&#39;</span><span class="p">],</span> <span class="n">a</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">hasExtra24</span><span class="p">,</span><span class="s1">&#39;hrs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[18]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>(196    24.0
+ Name: hrs, dtype: float64, 18.0)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;min&#39;</span><span class="p">,</span><span class="s1">&#39;sec&#39;</span><span class="p">]:</span>
+    <span class="n">a</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="n">col</span><span class="p">]</span><span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [37]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">cpu_hrs</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span><span class="n">h</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">s</span><span class="p">,</span> <span class="n">mpp</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">cori</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Args:</span>
+<span class="sd">        nodes: number of nodes</span>
+<span class="sd">        h,m,s: hours,min,sec</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cores_per_node</span><span class="o">=</span><span class="mi">32</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">cori</span><span class="p">:</span>
+        <span class="n">cores_per_node</span><span class="o">=</span><span class="mi">24</span>
+    <span class="n">mpp_factor</span><span class="o">=</span> <span class="mf">1.</span>
+    <span class="k">if</span> <span class="n">mpp</span><span class="p">:</span>
+        <span class="n">mpp_factor</span><span class="o">=</span> <span class="mf">2.5</span>
+
+    <span class="k">return</span> <span class="n">mpp_factor</span> <span class="o">*</span> <span class="n">cores_per_node</span> <span class="o">*</span> <span class="n">nodes</span> <span class="o">*</span> <span class="n">h</span> <span class="o">+</span> <span class="n">m</span><span class="o">/</span><span class="mf">60.</span> <span class="o">+</span> <span class="n">s</span><span class="o">/</span><span class="mf">3600.</span>
+
+<span class="n">a</span><span class="p">[</span><span class="s1">&#39;cpu_hrs&#39;</span><span class="p">]</span><span class="o">=</span> <span class="n">cpu_hrs</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;num_nodes&#39;</span><span class="p">],</span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;hrs&#39;</span><span class="p">],</span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;min&#39;</span><span class="p">],</span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;sec&#39;</span><span class="p">])</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;total cpu hours (M):&#39;</span><span class="p">,</span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;cpu_hrs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">/</span><span class="mf">1e6</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;total MPP hours (M):&#39;</span><span class="p">,</span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;cpu_hrs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">/</span><span class="mf">1e6</span><span class="o">*</span><span class="mf">2.5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+total cpu hours (M): 0.259007426667
+total MPP hours (M): 0.647518566667
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [38]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">fig</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;num_nodes&#39;</span><span class="p">,</span><span class="s1">&#39;hrs&#39;</span><span class="p">,</span><span class="s1">&#39;min&#39;</span><span class="p">,</span><span class="s1">&#39;sec&#39;</span><span class="p">]</span>
+<span class="n">i</span><span class="o">=</span><span class="mi">0</span>
+<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">names</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="n">row</span><span class="p">,</span><span class="n">col</span><span class="p">])</span>
+        <span class="n">i</span><span class="o">+=</span><span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/nb_cpu_hours_26_0.png" src="../_images/nb_cpu_hours_26_0.png" />
+</div>
+</div>
+</div>
+<div class="section" id="Parse-log-file-for-timings">
+<h1>Parse log file for timings<a class="headerlink" href="#Parse-log-file-for-timings" title="Permalink to this headline">¶</a></h1>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [95]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
+<span class="n">logfns</span><span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;HOME&#39;</span><span class="p">],</span><span class="s1">&#39;Downloads&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;logs/*/*/*/*/*&#39;</span><span class="p">))</span>
+<span class="n">logfns</span><span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span><span class="s1">&#39;log.1158p195&#39;</span><span class="p">)</span>
+         <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">logfns</span><span class="p">]</span>
+<span class="n">logfns</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[95]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>[&#39;/Users/kaylan1/Downloads/logs/n1200_notsorted/logs/115/1158p195/rs0/log.1158p195&#39;,
+ &#39;/Users/kaylan1/Downloads/logs/n1200_sorted/logs/115/1158p195/rs0/log.1158p195&#39;,
+ &#39;/Users/kaylan1/Downloads/logs/n300_notsorted/logs/115/1158p195/rs0/log.1158p195&#39;,
+ &#39;/Users/kaylan1/Downloads/logs/n300_sorted/logs/115/1158p195/rs0/log.1158p195&#39;,
+ &#39;/Users/kaylan1/Downloads/logs/n600_notsorted/logs/115/1158p195/rs0/log.1158p195&#39;,
+ &#39;/Users/kaylan1/Downloads/logs/n600_sorted/logs/115/1158p195/rs0/log.1158p195&#39;]
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [79]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">re</span>
+
+<span class="k">def</span> <span class="nf">hours_elapsed_logfn</span><span class="p">(</span><span class="n">logfn</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;returns hours between starting tims and finishing fitblobs</span>
+<span class="sd">    robust to next day occuring etc.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">logfn</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">foo</span><span class="p">:</span>
+        <span class="n">text</span><span class="o">=</span> <span class="n">foo</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="n">start</span><span class="o">=</span> <span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Running stage tims at.*?\n&#39;</span><span class="p">,</span><span class="n">text</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+               <span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+               <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+               <span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+               <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">,</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+            <span class="p">)</span>
+    <span class="n">end</span><span class="o">=</span> <span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Stage fitblobs finished.*?\n&#39;</span><span class="p">,</span><span class="n">text</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+               <span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+               <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+               <span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+               <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">,</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+         <span class="p">)</span>
+    <span class="n">start</span><span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span>
+    <span class="n">end</span><span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">end</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span><span class="o">/</span><span class="mf">3600.</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [80]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">dtime</span><span class="o">=</span> <span class="p">[</span><span class="n">hours_elapsed_logfn</span><span class="p">(</span><span class="n">logfn</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">logfn</span> <span class="ow">in</span> <span class="n">logfns</span><span class="p">]</span>
+<span class="n">dtime</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[80]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>[0.5491666666666667,
+ 0.7661111111111111,
+ 0.15861111111111112,
+ 0.2730555555555556,
+ 0.29944444444444446,
+ 0.43444444444444447]
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [89]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">dtime</span><span class="p">,</span>
+                  <span class="n">logfns</span><span class="o">=</span><span class="n">logfns</span><span class="p">))</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;logfns&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+<span class="n">notSorted</span><span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;notsorted&#39;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">notSorted</span><span class="p">,[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;time&#39;</span><span class="p">]])</span>
+<span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">notSorted</span><span class="p">,[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;time&#39;</span><span class="p">]])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+              name      time
+0  n1200_notsorted  0.549167
+2   n300_notsorted  0.158611
+4   n600_notsorted  0.299444
+           name      time
+1  n1200_sorted  0.766111
+3   n300_sorted  0.273056
+5   n600_sorted  0.434444
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [96]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1">#simcatfns= glob(os.path.join(os.environ[&#39;HOME&#39;],&#39;Downloads&#39;,</span>
+<span class="c1">#                     &#39;simcats/*/*/*/*/*&#39;))</span>
+<span class="n">simcatfns</span><span class="o">=</span> <span class="p">[(</span><span class="n">fn</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/Downloads/logs&#39;</span><span class="p">,</span><span class="s1">&#39;/Downloads/simcats&#39;</span><span class="p">)</span>
+               <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/logs/&#39;</span><span class="p">,</span><span class="s1">&#39;/obiwan/&#39;</span><span class="p">)</span>
+               <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;log.1158p195&#39;</span><span class="p">,</span><span class="s1">&#39;simcat-elg-1158p195.fits&#39;</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">logfns</span><span class="p">]</span>
+<span class="n">simcatfns</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[96]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>[&#39;/Users/kaylan1/Downloads/simcats/n1200_notsorted/obiwan/115/1158p195/rs0/simcat-elg-1158p195.fits&#39;,
+ &#39;/Users/kaylan1/Downloads/simcats/n1200_sorted/obiwan/115/1158p195/rs0/simcat-elg-1158p195.fits&#39;,
+ &#39;/Users/kaylan1/Downloads/simcats/n300_notsorted/obiwan/115/1158p195/rs0/simcat-elg-1158p195.fits&#39;,
+ &#39;/Users/kaylan1/Downloads/simcats/n300_sorted/obiwan/115/1158p195/rs0/simcat-elg-1158p195.fits&#39;,
+ &#39;/Users/kaylan1/Downloads/simcats/n600_notsorted/obiwan/115/1158p195/rs0/simcat-elg-1158p195.fits&#39;,
+ &#39;/Users/kaylan1/Downloads/simcats/n600_sorted/obiwan/115/1158p195/rs0/simcat-elg-1158p195.fits&#39;]
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [99]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">astrometry.util.fits</span> <span class="kn">import</span> <span class="n">fits_table</span>
+<span class="n">num_srcs</span><span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">fits_table</span><span class="p">(</span><span class="n">fn</span><span class="p">))</span>
+           <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">simcatfns</span><span class="p">]</span>
+<span class="n">num_srcs</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[99]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>[1044, 1133, 266, 300, 526, 587]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="4x-number-sources-takes-~-3x-as-long,-so-beneficial-to-use-more-sources">
+<h1>4x number sources takes ~ 3x as long, so beneficial to use more sources<a class="headerlink" href="#4x-number-sources-takes-~-3x-as-long,-so-beneficial-to-use-more-sources" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li>However, at 1200 takes ~ 1 hr and loose ~ 70 overlappers</li>
+<li>out of time errors will cose ~ 1 hr, so hurts using more sources</li>
+<li>May also run into mem error with more sources</li>
+</ul>
+<div class="section" id="Try-1000-sources">
+<h2>Try 1000 sources<a class="headerlink" href="#Try-1000-sources" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [103]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">dtime</span><span class="p">,</span>
+                     <span class="n">logfns</span><span class="o">=</span><span class="n">logfns</span><span class="p">,</span>
+                     <span class="n">num_srcs</span><span class="o">=</span><span class="n">num_srcs</span><span class="p">))</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;logfns&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+<span class="n">notSorted</span><span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;notsorted&#39;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">notSorted</span><span class="p">,[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;time&#39;</span><span class="p">,</span><span class="s1">&#39;num_srcs&#39;</span><span class="p">]])</span>
+<span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">notSorted</span><span class="p">,[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;time&#39;</span><span class="p">,</span><span class="s1">&#39;num_srcs&#39;</span><span class="p">]])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+              name      time  num_srcs
+0  n1200_notsorted  0.549167      1044
+2   n300_notsorted  0.158611       266
+4   n600_notsorted  0.299444       526
+           name      time  num_srcs
+1  n1200_sorted  0.766111      1133
+3   n300_sorted  0.273056       300
+5   n600_sorted  0.434444       587
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [114]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;time_per_src&#39;</span><span class="p">]</span><span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">/</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;num_srcs&#39;</span><span class="p">]</span><span class="o">*</span><span class="mi">3600</span>
+<span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">notSorted</span><span class="p">,[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;time_per_src&#39;</span><span class="p">]])</span>
+<span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">notSorted</span><span class="p">,[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;time_per_src&#39;</span><span class="p">]])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+              name  time_per_src
+0  n1200_notsorted      1.893678
+2   n300_notsorted      2.146617
+4   n600_notsorted      2.049430
+           name  time_per_src
+1  n1200_sorted      2.434245
+3   n300_sorted      3.276667
+5   n600_sorted      2.664395
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [121]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">notSorted</span><span class="p">,</span><span class="s1">&#39;time_per_src&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">/</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">notSorted</span><span class="p">,</span><span class="s1">&#39;time_per_src&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[121]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>array([ 1.28545886,  1.52643316,  1.30006669])
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [122]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">300</span><span class="p">,</span><span class="mi">600</span><span class="p">,</span><span class="mi">1200</span><span class="p">],</span>
+         <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">notSorted</span><span class="p">,</span><span class="s1">&#39;time_per_src&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">/</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">notSorted</span><span class="p">,</span><span class="s1">&#39;time_per_src&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[122]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>[&lt;matplotlib.lines.Line2D at 0x116878cc0&gt;]
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/nb_cpu_hours_38_1.png" src="../_images/nb_cpu_hours_38_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [40]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">start</span><span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span>
+<span class="n">end</span><span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">end</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span>
+<span class="n">start</span><span class="p">,</span><span class="n">end</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[40]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>(Timestamp(&#39;2017-12-11 12:57:14&#39;), Timestamp(&#39;2017-12-11 13:30:11&#39;))
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [43]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">dt</span><span class="o">=</span> <span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [70]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">dt</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[70]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>1977.0000000000002
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [51]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">start</span><span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s1">&#39;2017-12-11 00:10:10&#39;</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span>
+<span class="n">end</span><span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s1">&#39;2017-12-12 00:11:10&#39;</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span>
+<span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span><span class="o">/</span><span class="mf">3600.</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[51]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>24.016666666666666
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [53]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="p">[</span><span class="n">start</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span>
+                     <span class="n">end</span><span class="o">=</span><span class="p">[</span><span class="n">end</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [54]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;start&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;end&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">AttributeError</span>                            Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-54-e77d8e53459f&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span><span class="ansi-blue-fg">(</span>df<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#39;start&#39;</span><span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">-</span> df<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#39;end&#39;</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>total_seconds<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/miniconda3/envs/mlbook/lib/python3.6/site-packages/pandas/core/generic.py</span> in <span class="ansi-cyan-fg">__getattr__</span><span class="ansi-blue-fg">(self, name)</span>
+<span class="ansi-green-intense-fg ansi-bold">   3079</span>             <span class="ansi-green-fg">if</span> name <span class="ansi-green-fg">in</span> self<span class="ansi-blue-fg">.</span>_info_axis<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">   3080</span>                 <span class="ansi-green-fg">return</span> self<span class="ansi-blue-fg">[</span>name<span class="ansi-blue-fg">]</span>
+<span class="ansi-green-fg">-&gt; 3081</span><span class="ansi-red-fg">             </span><span class="ansi-green-fg">return</span> object<span class="ansi-blue-fg">.</span>__getattribute__<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> name<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">   3082</span>
+<span class="ansi-green-intense-fg ansi-bold">   3083</span>     <span class="ansi-green-fg">def</span> __setattr__<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> name<span class="ansi-blue-fg">,</span> value<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+
+<span class="ansi-red-fg">AttributeError</span>: &#39;Series&#39; object has no attribute &#39;total_seconds&#39;
+</pre></div></div>
+</div>
+</div>
+</div>
+<div class="section" id="number-of-tractor-tables-a-given-slurm-file-was-able-to-make">
+<h1>number of tractor tables a given slurm file was able to make<a class="headerlink" href="#number-of-tractor-tables-a-given-slurm-file-was-able-to-make" title="Permalink to this headline">¶</a></h1>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [125]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
+<span class="n">fn</span><span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;HOME&#39;</span><span class="p">],</span><span class="s1">&#39;Downloads&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;slurm-8934400.out&#39;</span><span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">foo</span><span class="p">:</span>
+    <span class="n">text</span><span class="o">=</span> <span class="n">foo</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">start</span><span class="o">=</span> <span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Logging to:.*?\n&#39;</span><span class="p">,</span><span class="n">text</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+           <span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+           <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+           <span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+           <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">,</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [142]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">add_fits</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">text</span><span class="o">+</span><span class="s1">&#39;.fits&#39;</span>
+
+<span class="k">def</span> <span class="nf">trac_fns</span><span class="p">(</span><span class="n">slurm_fn</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">slurm_fn</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">foo</span><span class="p">:</span>
+        <span class="n">text</span><span class="o">=</span> <span class="n">foo</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Logging to:.*?\n&#39;</span><span class="p">,</span><span class="n">text</span><span class="p">))</span>
+             <span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Logging to:\s&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+             <span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+             <span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;logs&#39;</span><span class="p">,</span><span class="s1">&#39;tractor&#39;</span><span class="p">)</span>
+             <span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;log\.&#39;</span><span class="p">,</span><span class="s1">&#39;tractor-&#39;</span><span class="p">)</span>
+             <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">add_fits</span><span class="p">)</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">values</span>
+
+<span class="n">a</span><span class="o">=</span><span class="n">trac_fns</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [144]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[144]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&#39;/global/cscratch1/sd/kaylanb/obiwan_out/elg_dr5/tractor/112/1127p272/rs0/tractor-1127p272.fits&#39;
+</pre></div>
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014-2018, Kaylan Burleigh, John Moustakas.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

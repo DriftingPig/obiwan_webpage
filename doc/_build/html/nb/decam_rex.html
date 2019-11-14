@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Template for how the legacypipe/Tractor pipeline is setup and run on DECam data &#8212; obiwan 1.2.0 documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default ">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          Obiwan</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.2.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../api.html">API</a></li>
+                <li><a href="../tutorials.html">Tutorials</a></li>
+                <li><a href="../deeplearning.html">Deep Learning</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Pages <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">This Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Template for how the legacypipe/Tractor pipeline is setup and run on DECam data</a><ul>
+<li><a class="reference internal" href="#Modify-accordingly-for-PTF,-ZTF,-etc.">Modify accordingly for PTF, ZTF, etc.</a><ul>
+<li><a class="reference internal" href="#Python-Stack">Python Stack</a></li>
+<li><a class="reference internal" href="#Setup-that-went-into-test/test_decam_rex.py">Setup that went into test/test_decam_rex.py</a></li>
+<li><a class="reference internal" href="#Code-you'll-need-to-write">Code you’ll need to write</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 9ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+</style>
+<div class="section" id="Template-for-how-the-legacypipe/Tractor-pipeline-is-setup-and-run-on-DECam-data">
+<h1>Template for how the legacypipe/Tractor pipeline is setup and run on DECam data<a class="headerlink" href="#Template-for-how-the-legacypipe/Tractor-pipeline-is-setup-and-run-on-DECam-data" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="Modify-accordingly-for-PTF,-ZTF,-etc.">
+<h2>Modify accordingly for PTF, ZTF, etc.<a class="headerlink" href="#Modify-accordingly-for-PTF,-ZTF,-etc." title="Permalink to this headline">¶</a></h2>
+<div class="section" id="Python-Stack">
+<h3>Python Stack<a class="headerlink" href="#Python-Stack" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>At NERSC do the following. This uses Ted Kisner’s conda build for
+DESI imaging code then copies everything to your scratch so you can
+do “conda install …” for any extra packages you need</li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">module</span> <span class="n">use</span> <span class="o">/</span><span class="k">global</span><span class="o">/</span><span class="n">common</span><span class="o">/</span><span class="err">$</span><span class="n">NERSC_HOST</span><span class="o">/</span><span class="n">contrib</span><span class="o">/</span><span class="n">desi</span><span class="o">/</span><span class="n">modulefiles</span>
+<span class="n">module</span> <span class="n">load</span> <span class="n">desiconda</span><span class="o">/</span><span class="mi">20170719</span><span class="o">-</span><span class="mf">1.1</span><span class="o">.</span><span class="mi">9</span><span class="o">-</span><span class="n">imaging</span>
+<span class="n">conda</span> <span class="n">create</span> <span class="o">--</span><span class="n">prefix</span> <span class="err">$</span><span class="n">CSCRATCH</span><span class="o">/</span><span class="n">conda</span><span class="o">-</span><span class="n">envs</span><span class="o">/</span><span class="mi">20170719</span><span class="o">-</span><span class="mf">1.1</span><span class="o">.</span><span class="mi">9</span><span class="o">-</span><span class="n">imaging</span> <span class="o">--</span><span class="nb">file</span> <span class="err">$</span><span class="n">DESICONDA</span><span class="o">/</span><span class="n">pkg_list</span><span class="o">.</span><span class="n">txt</span>
+<span class="n">source</span> <span class="n">activate</span> <span class="err">$</span><span class="n">CSCRATCH</span><span class="o">/</span><span class="n">conda</span><span class="o">-</span><span class="n">envs</span><span class="o">/</span><span class="mi">20170719</span><span class="o">-</span><span class="mf">1.1</span><span class="o">.</span><span class="mi">9</span><span class="o">-</span><span class="n">imaging</span>
+</pre></div>
+</div>
+</div>
+<ul class="simple">
+<li>Make sure it all works by running a test case</li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># SF98 dust maps</span>
+<span class="n">export</span> <span class="n">MYDIR</span><span class="o">=</span><span class="err">$</span><span class="n">CSCRATCH</span><span class="o">/</span><span class="n">repos</span>
+<span class="n">mkdir</span> <span class="o">-</span><span class="n">p</span> <span class="err">$</span><span class="n">MYDIR</span><span class="o">/</span><span class="n">dust</span><span class="o">/</span><span class="n">maps</span>
+<span class="n">cd</span> <span class="err">$</span><span class="n">MYDIR</span><span class="o">/</span><span class="n">dust</span><span class="o">/</span><span class="n">maps</span>
+<span class="n">wget</span> <span class="o">-</span><span class="n">c</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">portal</span><span class="o">.</span><span class="n">nersc</span><span class="o">.</span><span class="n">gov</span><span class="o">/</span><span class="n">project</span><span class="o">/</span><span class="n">cosmo</span><span class="o">/</span><span class="n">temp</span><span class="o">/</span><span class="n">dstn</span><span class="o">/</span><span class="n">travis</span><span class="o">-</span><span class="n">ci</span><span class="o">/</span><span class="n">maps</span><span class="o">/</span><span class="n">SFD_dust_4096_ngp</span><span class="o">.</span><span class="n">fits</span>
+<span class="n">wget</span> <span class="o">-</span><span class="n">c</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">portal</span><span class="o">.</span><span class="n">nersc</span><span class="o">.</span><span class="n">gov</span><span class="o">/</span><span class="n">project</span><span class="o">/</span><span class="n">cosmo</span><span class="o">/</span><span class="n">temp</span><span class="o">/</span><span class="n">dstn</span><span class="o">/</span><span class="n">travis</span><span class="o">-</span><span class="n">ci</span><span class="o">/</span><span class="n">maps</span><span class="o">/</span><span class="n">SFD_dust_4096_sgp</span><span class="o">.</span><span class="n">fits</span>
+<span class="n">export</span> <span class="n">DUST_DIR</span><span class="o">=</span><span class="err">$</span><span class="n">MYREPO</span><span class="o">/</span><span class="n">dust</span>
+<span class="c1"># imaging pipeline</span>
+<span class="n">cd</span> <span class="err">$</span><span class="n">MYDIR</span>
+<span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">legacysurvey</span><span class="o">/</span><span class="n">legacypipe</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">legacypipe</span>
+<span class="n">git</span> <span class="n">checkout</span> <span class="n">f4fc46ea0</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">cd</span> <span class="n">py</span><span class="o">/</span><span class="n">test</span>
+<span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">raw</span><span class="o">.</span><span class="n">githubusercontent</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">legacysurvey</span><span class="o">/</span><span class="n">obiwan</span><span class="o">/</span><span class="n">master</span><span class="o">/</span><span class="n">py</span><span class="o">/</span><span class="n">obiwan</span><span class="o">/</span><span class="n">test</span><span class="o">/</span><span class="n">end_to_end</span><span class="o">/</span><span class="n">test_decam_rex</span><span class="o">.</span><span class="n">p</span>
+<span class="n">cd</span> <span class="o">../</span>
+<span class="n">python</span> <span class="n">py</span><span class="o">/</span><span class="n">test_decam_rex</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Setup-that-went-into-test/test_decam_rex.py">
+<h3>Setup that went into test/test_decam_rex.py<a class="headerlink" href="#Setup-that-went-into-test/test_decam_rex.py" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Environment vars</li>
+<li>export DUST_DIR=<code class="docutils literal notranslate"><span class="pre">$MYREPO</span></code>/dust</li>
+<li>export LEGACY_SURVEY_DIR=<code class="docutils literal notranslate"><span class="pre">$MYREPO</span></code>/legacypipe/py/test/testcase6</li>
+<li>ignore WISE forced photometry for now</li>
+<li>Input Files (stored in legacy_survey_dir)</li>
+</ul>
+<ol class="arabic simple">
+<li>fits tables for the 0.25x0.25 deg2 chunks of sky, “bricks”, to
+process (survey-bricks.fits.gz), bright star locations to avoid
+(tycho2.fits.gz), and photometric and astrometric statistics for each
+CCD (survey-ccds-1.fits.gz)</li>
+<li>directories containing the image (images/) and calibration
+(calib/sextractor, calib/psfex) files</li>
+</ol>
+<ul class="simple">
+<li>Create the calibration files BEFORE running main() below</li>
+</ul>
+<p>What this command does:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;--brick&#39;</span><span class="p">,</span> <span class="s1">&#39;1102p240&#39;</span><span class="p">,</span> <span class="s1">&#39;--zoom&#39;</span><span class="p">,</span> <span class="s1">&#39;500&#39;</span><span class="p">,</span> <span class="s1">&#39;600&#39;</span><span class="p">,</span> <span class="s1">&#39;650&#39;</span><span class="p">,</span> <span class="s1">&#39;750&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;--force-all&#39;</span><span class="p">,</span> <span class="s1">&#39;--no-write&#39;</span><span class="p">,</span> <span class="s1">&#39;--no-wise&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;--survey-dir&#39;</span><span class="p">,</span> <span class="n">surveydir</span><span class="p">,</span>
+           <span class="s1">&#39;--outdir&#39;</span><span class="p">,</span> <span class="n">outdir</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<ul class="simple">
+<li>“brick 1102p240” is in the survey-bricks.fits.gz table.</li>
+<li>Legacypipe interpolates 0.25x0.25 deg2 to a 3600x3600 pixel grid</li>
+<li>“zoom 500 600 …” analyses only that slice of the full 3600x3600
+region</li>
+<li>“force-all, no-write, no-wise” run everything, dont be verbose, skip
+WISE forced photometry</li>
+<li>“survey-dir, outdir” legacy_survey_dir and where to write all
+legacypipe/tractor outputs</li>
+</ul>
+<div class="line-block">
+<div class="line">The main() above does the following: * call the run_brick() function
+in legacypipe/py/legacypipe/runbrick.py * which runs the 6 “stages”
+of the legacypipe/Tractor pipeline 1. stage_tims: read in all fits
+tables, images, and calibration data from legacy_survey_dir, save as
+Tractor Image Objects (tims)</div>
+<div class="line">2. stage_image_coadds</div>
+<div class="line">2. stage_srcs: detect sources at SN &gt;= 6 using five matched filters</div>
+<div class="line">4. stage_fitblobs: finds the best fitting point-source or galaxy
+model for each source. Each detection is pixel dilated to a group of
+contiguous pixels called a “blob”, blobs are processed in parallel,
+each blob can have many sources</div>
+<div class="line">5. stage_coadds: make coadded image, invvar, model, chi2, and depth
+images</div>
+<div class="line">6. stage_wise_forced: use best fit models to do forced photometry on
+WISE imaging 7. stage_writecat: write Tractor catalogues</div>
+</div>
+<p>REMEMBER: create the calibration files BEFORE running legacypipe</p>
+</div>
+<div class="section" id="Code-you'll-need-to-write">
+<h3>Code you’ll need to write<a class="headerlink" href="#Code-you'll-need-to-write" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>decam.py</li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># https://github.com/legacysurvey/legacypipe/blob/master/py/legacypipe/decam.py</span>
+<span class="c1"># Edited to be barebones</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">fitsio</span>
+<span class="kn">from</span> <span class="nn">legacypipe.image</span> <span class="kn">import</span> <span class="n">CalibMixin</span>
+<span class="kn">from</span> <span class="nn">legacypipe.cpimage</span> <span class="kn">import</span> <span class="n">CPImage</span>
+<span class="kn">from</span> <span class="nn">legacypipe.survey</span> <span class="kn">import</span> <span class="n">LegacySurveyData</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Code specific to images from the Dark Energy Camera (DECam).</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="k">class</span> <span class="nc">DecamImage</span><span class="p">(</span><span class="n">CPImage</span><span class="p">,</span> <span class="n">CalibMixin</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    A LegacySurveyImage subclass to handle images from the Dark Energy</span>
+<span class="sd">    Camera, DECam, on the Blanco telescope.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># background subtraction fitting spline to every 512 pixels, interpolating between</span>
+    <span class="n">splinesky_boxsize</span> <span class="o">=</span> <span class="mi">512</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">survey</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DecamImage</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">survey</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+        <span class="c1"># Check that these are set properly</span>
+        <span class="c1">#self.imgfn # image relative path starting from legacy_survey_dir/images/</span>
+        <span class="c1">#self.dqfn # bad pixel image</span>
+        <span class="c1">#self.wtfn # invvar image</span>
+
+        <span class="c1"># zeropoint units in ADU/sec</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ccdzpt</span> <span class="o">+=</span> <span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exptime</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;DECam &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">nominal_zeropoints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Units ADU/sec for a good night 2 years ago</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">g</span> <span class="o">=</span> <span class="mf">25.08</span><span class="p">,</span>
+                    <span class="n">r</span> <span class="o">=</span> <span class="mf">25.29</span><span class="p">,</span>
+                    <span class="n">z</span> <span class="o">=</span> <span class="mf">24.92</span><span class="p">,)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">photometric_ccds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">survey</span><span class="p">,</span> <span class="n">ccds</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Remove exposures from survey-ccds-1.fits.gz if image quality not</span>
+<span class="sd">        good enough</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          ccds: the survey-ccds-1.fits.gz table</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Nominal zeropoints (DECam)</span>
+        <span class="n">z0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nominal_zeropoints</span><span class="p">()</span>
+        <span class="n">z0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">z0</span><span class="p">[</span><span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">ccds</span><span class="o">.</span><span class="n">filter</span><span class="p">])</span>
+        <span class="c1"># You can skipping removing any of them with:</span>
+        <span class="n">good</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ccds</span><span class="p">),</span> <span class="nb">bool</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">good</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">ccd_cuts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">survey</span><span class="p">,</span> <span class="n">ccds</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ccds</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_good_image_subregion</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Optional&quot;&quot;&quot;</span>
+        <span class="n">x0</span><span class="p">,</span><span class="n">x1</span><span class="p">,</span><span class="n">y0</span><span class="p">,</span><span class="n">y1</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span><span class="bp">None</span><span class="p">,</span><span class="bp">None</span><span class="p">,</span><span class="bp">None</span>
+        <span class="c1"># x0,x1,y0,y1 = 100,1023,100,self.height-100</span>
+        <span class="k">return</span> <span class="n">x0</span><span class="p">,</span><span class="n">x1</span><span class="p">,</span><span class="n">y0</span><span class="p">,</span><span class="n">y1</span>
+
+    <span class="k">def</span> <span class="nf">read_dq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;read bad pixel image and possibly its header&quot;&quot;&quot;</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Reading data quality from&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dqfn</span><span class="p">,</span> <span class="s1">&#39;hdu&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hdu</span><span class="p">)</span>
+        <span class="n">dq</span><span class="p">,</span><span class="n">hdr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_fits</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dqfn</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hdu</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">header</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">dq</span><span class="p">,</span><span class="n">hdr</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">dq</span>
+
+    <span class="k">def</span> <span class="nf">read_invvar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">clipThresh</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Reading inverse-variance from&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wtfn</span><span class="p">,</span> <span class="s1">&#39;hdu&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hdu</span><span class="p">)</span>
+        <span class="n">invvar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_fits</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wtfn</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hdu</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">invvar</span>
+
+    <span class="k">def</span> <span class="nf">run_calibs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psfex</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">sky</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">se</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                   <span class="n">funpack</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">fcopy</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">use_mask</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                   <span class="n">force</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">just_check</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">git_version</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                   <span class="n">splinesky</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Read psfex PSF model and splinesky model&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_psf_model</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">pixPsf</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">hybridPsf</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_sky_model</span><span class="p">(</span><span class="n">splinesky</span><span class="o">=</span><span class="n">splinesky</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<ul class="simple">
+<li>WCS</li>
+<li>write TPV formation keys to the header of each image, something like
+this</li>
+</ul>
+CTYPE2  = 'DEC--TPV'           / WCS projection type for this axis
+CTYPE1  = 'RA---TPV'           / WCS projection type for this axis
+CRVAL1  =       121.7780402905 / World coordinate on this axis
+CRVAL2  =       9.777517812217 / World coordinate on this axis
+CRPIX1  =              13422.2 / Reference pixel on this axis
+CRPIX2  =             6306.333 / Reference pixel on this axis
+CD1_1   =   4.088761751834E-08 / Linear projection matrix
+CD1_2   =    7.28654335298E-05 / Linear projection matrix
+CD2_1   =  -7.286249453005E-05 / Linear projection matrix
+CD2_2   =   4.829789501779E-09 / Linear projection matrix
+PV1_7   =   0.0001292520097439 / Projection distortion parameter
+PV2_8   =    -0.01085639046593 / Projection distortion parameter
+PV2_9   =    0.006447478695312 / Projection distortion parameter
+PV2_0   =   -0.005865638033892 / Projection distortion parameter
+PV2_1   =       1.022934665377 / Projection distortion parameter
+PV2_2   =   -0.009988184329701 / Projection distortion parameter
+PV2_3   =                  0.0 / PV distortion coefficient
+PV2_4   =    -0.02553759230415 / Projection distortion parameter
+PV2_5   =     0.02039038294948 / Projection distortion parameter
+PV2_6   =   -0.009420461615663 / Projection distortion parameter
+PV2_7   =    0.009366132237292 / Projection distortion parameter
+PV1_6   =     0.01073408153216 / Projection distortion parameter
+PV2_10  =   -0.002902607846633 / Projection distortion parameter
+PV1_4   =    0.007984725876406 / Projection distortion parameter
+PV1_3   =                  0.0 / PV distortion coefficient
+PV1_2   =    -0.01061382938526 / Projection distortion parameter
+PV1_1   =       1.015157192369 / Projection distortion parameter
+PV1_0   =    0.004301039435068 / Projection distortion parameter
+PV1_9   =    0.007785488836336 / Projection distortion parameter
+PV1_8   =   -0.007287409639159 / Projection distortion parameter
+PV1_5   =    -0.02011363647483 / Projection distortion parameter
+PV1_10  =   -0.003686927828818 / Projection distortion parameter<p>That should be 99% of getting it running</p>
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014-2018, Kaylan Burleigh, John Moustakas.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

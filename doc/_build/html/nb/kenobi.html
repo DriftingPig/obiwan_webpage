@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>&lt;no title&gt; &#8212; obiwan 1.2.0 documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default ">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          Obiwan</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.2.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../api.html">API</a></li>
+                <li><a href="../tutorials.html">Tutorials</a></li>
+                <li><a href="../deeplearning.html">Deep Learning</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Pages <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">This Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul class="simple">
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 9ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+</style>
+<p>Run: python obiwan/kenobi.py -n 2 –DR 5 -b 1238p245 -o elg
+–add_sim_noise –zoom 1550 1650 1550 1650</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
+<span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">h5py</span>
+<span class="kn">import</span> <span class="nn">galsim</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">pdb</span>
+<span class="kn">import</span> <span class="nn">photutils</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">pkg_resources</span> <span class="kn">import</span> <span class="n">resource_filename</span>
+<span class="kn">from</span> <span class="nn">pickle</span> <span class="kn">import</span> <span class="n">dump</span>
+
+
+<span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">Table</span><span class="p">,</span> <span class="n">Column</span><span class="p">,</span> <span class="n">vstack</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+<span class="c1">#from astropy import wcs as astropy_wcs</span>
+<span class="kn">from</span> <span class="nn">fitsio</span> <span class="kn">import</span> <span class="n">FITSHDR</span>
+<span class="kn">import</span> <span class="nn">fitsio</span>
+
+<span class="kn">from</span> <span class="nn">astropy</span> <span class="kn">import</span> <span class="n">units</span>
+<span class="kn">from</span> <span class="nn">astropy.coordinates</span> <span class="kn">import</span> <span class="n">SkyCoord</span>
+
+<span class="kn">from</span> <span class="nn">tractor.psfex</span> <span class="kn">import</span> <span class="n">PsfEx</span><span class="p">,</span> <span class="n">PsfExModel</span>
+<span class="kn">from</span> <span class="nn">tractor.basics</span> <span class="kn">import</span> <span class="n">GaussianMixtureEllipsePSF</span><span class="p">,</span> <span class="n">RaDecPos</span>
+
+<span class="kn">from</span> <span class="nn">legacypipe.runbrick</span> <span class="kn">import</span> <span class="n">run_brick</span>
+<span class="kn">from</span> <span class="nn">legacypipe.decam</span> <span class="kn">import</span> <span class="n">DecamImage</span>
+<span class="kn">from</span> <span class="nn">legacypipe.survey</span> <span class="kn">import</span> <span class="n">LegacySurveyData</span><span class="p">,</span> <span class="n">wcs_for_brick</span>
+
+<span class="kn">from</span> <span class="nn">astrometry.util.fits</span> <span class="kn">import</span> <span class="n">fits_table</span><span class="p">,</span> <span class="n">merge_tables</span>
+<span class="kn">from</span> <span class="nn">astrometry.util.ttime</span> <span class="kn">import</span> <span class="n">Time</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
+<span></span><span class="o">%</span><span class="k">aimport</span> obiwan.priors
+<span class="c1"># use getSrcsInBrick</span>
+<span class="o">%</span><span class="k">aimport</span> obiwan.db_tools
+<span class="c1"># use get_parser,main</span>
+<span class="o">%</span><span class="k">aimport</span> obiwan.kenobi
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">print</span><span class="p">(</span><span class="n">obiwan</span><span class="o">.</span><span class="n">kenobi</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+/global/cscratch1/sd/kaylanb/test/obiwan/py/obiwan/kenobi.py
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">obiwan</span><span class="o">.</span><span class="n">kenobi</span><span class="o">.</span><span class="n">get_sample_fn</span><span class="p">(</span><span class="s1">&#39;hey&#39;</span><span class="p">,</span><span class="s1">&#39;/global/cscratch1/sd/kaylanb/&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[19]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&#39;/global/cscratch1/sd/kaylanb/input_sample/bybrick/sample_hey.fits&#39;
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Environment Vars</span>
+<span class="c1">#LEGACY_SURVEY_DIR=&quot;/global/cscratch1/sd/kaylanb/test/legacypipe/py/legacypipe-dir&quot;</span>
+<span class="c1">#desiproc=&quot;/global/cscratch1/sd/desiproc/&quot;</span>
+<span class="c1">#DUST_DIR=desiproc+&quot;dust/v0_0&quot;</span>
+<span class="c1">#UNWISE_COADDS_DIR=&quot;unwise-coadds/fulldepth&quot;:desiproc+&quot;unwise-coadds/w3w4&quot;</span>
+<span class="c1">#UNWISE_COADDS_TIMERESOLVED_DIR=/global/cscratch1/sd/desiproc/unwise-coadds/time_resolved_neo2</span>
+<span class="c1">#UNWISE_COADDS_TIMERESOLVED_INDEX=/global/cscratch1/sd/desiproc/unwise-coadds/time_resolved_neo2/time_resolved_neo2-atlas.fits</span>
+<span class="c1">#DECALS_SIM_DIR=/global/cscratch1/sd/kaylanb/test/obiwan/py/obiwan/junk</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">print</span><span class="p">(</span><span class="n">obiwan</span><span class="o">.</span><span class="n">kenobi</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+/global/cscratch1/sd/kaylanb/test/obiwan/py/obiwan/kenobi.py
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># notebook cares about order of this list for some reason, -o goes first</span>
+<span class="n">cmd_line</span><span class="o">=</span> <span class="p">[</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;elg&#39;</span><span class="p">,</span><span class="s1">&#39;-n&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">,</span> <span class="s1">&#39;--DR&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;-b&#39;</span><span class="p">,</span> <span class="s1">&#39;1238p245,&#39;</span>
+           <span class="s1">&#39;--add_sim_noise&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;--zoom&#39;</span><span class="p">,</span> <span class="s1">&#39;1550&#39;</span><span class="p">,</span> <span class="s1">&#39;1650&#39;</span><span class="p">,</span> <span class="s1">&#39;1550&#39;</span><span class="p">,</span> <span class="s1">&#39;1650&#39;</span><span class="p">]</span>
+<span class="n">parser</span><span class="o">=</span> <span class="n">obiwan</span><span class="o">.</span><span class="n">kenobi</span><span class="o">.</span><span class="n">get_parser</span><span class="p">()</span>
+<span class="n">namesp</span><span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">cmd_line</span><span class="p">)</span>
+<span class="n">obiwan</span><span class="o">.</span><span class="n">kenobi</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">namesp</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Args: Namespace(DR=5, add_sim_noise=False, all_blobs=False, brick=&#39;1238p245,--add_sim_noise&#39;, bricklist=&#39;bricks-eboss-ngc.txt&#39;, bright_galaxies=False, cutouts=False, early_coadds=False, folding_threshold=1e-05, image_eq_model=False, nobj=2, nproc=1, objtype=&#39;elg&#39;, prefix=&#39;&#39;, rowstart=0, stage=None, stamp_size=64, survey_dir=None, threads=1, verbose=False, zoom=[1550, 1650, 1550, 1650])
+INFO:decals_sim:decals_sim.py args=Namespace(DR=5, add_sim_noise=False, all_blobs=False, brick=&#39;1238p245,--add_sim_noise&#39;, bricklist=&#39;bricks-eboss-ngc.txt&#39;, bright_galaxies=False, cutouts=False, early_coadds=False, folding_threshold=1e-05, image_eq_model=False, nobj=2, nproc=1, objtype=&#39;elg&#39;, prefix=&#39;&#39;, rowstart=0, stage=None, stamp_size=64, survey_dir=None, threads=1, verbose=False, zoom=[1550, 1650, 1550, 1650])
+INFO:decals_sim:Object type = elg
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+<span class="ansi-red-fg">AttributeError</span>Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-25-3566123a7157&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-intense-fg ansi-bold">      5</span> parser<span class="ansi-blue-fg">=</span> obiwan<span class="ansi-blue-fg">.</span>kenobi<span class="ansi-blue-fg">.</span>get_parser<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">      6</span> namesp<span class="ansi-blue-fg">=</span> parser<span class="ansi-blue-fg">.</span>parse_args<span class="ansi-blue-fg">(</span>args<span class="ansi-blue-fg">=</span>cmd_line<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">----&gt; 7</span><span class="ansi-red-fg"> </span>obiwan<span class="ansi-blue-fg">.</span>kenobi<span class="ansi-blue-fg">.</span>main<span class="ansi-blue-fg">(</span>args<span class="ansi-blue-fg">=</span>namesp<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">/global/cscratch1/sd/kaylanb/test/obiwan/py/obiwan/kenobi.py</span> in <span class="ansi-cyan-fg">main</span><span class="ansi-blue-fg">(args)</span>
+<span class="ansi-green-intense-fg ansi-bold">   1181</span>     survey <span class="ansi-blue-fg">=</span> LegacySurveyData<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">   1182</span>     brickinfo <span class="ansi-blue-fg">=</span> survey<span class="ansi-blue-fg">.</span>get_brick_by_name<span class="ansi-blue-fg">(</span>brickname<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">-&gt; 1183</span><span class="ansi-red-fg">     </span><span class="ansi-green-fg">print</span><span class="ansi-blue-fg">(</span>brickname<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">   1184</span>     brickwcs <span class="ansi-blue-fg">=</span> wcs_for_brick<span class="ansi-blue-fg">(</span>brickinfo<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">   1185</span>     W<span class="ansi-blue-fg">,</span> H<span class="ansi-blue-fg">,</span> pixscale <span class="ansi-blue-fg">=</span> brickwcs<span class="ansi-blue-fg">.</span>get_width<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> brickwcs<span class="ansi-blue-fg">.</span>get_height<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> brickwcs<span class="ansi-blue-fg">.</span>pixel_scale<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">/global/cscratch1/sd/kaylanb/test/legacypipe/py/legacypipe/survey.pyc</span> in <span class="ansi-cyan-fg">wcs_for_brick</span><span class="ansi-blue-fg">(b, W, H, pixscale)</span>
+<span class="ansi-green-intense-fg ansi-bold">    533</span>     <span class="ansi-green-fg">from</span> astrometry<span class="ansi-blue-fg">.</span>util<span class="ansi-blue-fg">.</span>util <span class="ansi-green-fg">import</span> Tan
+<span class="ansi-green-intense-fg ansi-bold">    534</span>     pixscale <span class="ansi-blue-fg">=</span> pixscale <span class="ansi-blue-fg">/</span> <span class="ansi-cyan-fg">3600.</span>
+<span class="ansi-green-fg">--&gt; 535</span><span class="ansi-red-fg">     return Tan(b.ra, b.dec, W/2.+0.5, H/2.+0.5,
+</span><span class="ansi-green-intense-fg ansi-bold">    536</span>                <span class="ansi-blue-fg">-</span>pixscale<span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">0.</span><span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">0.</span><span class="ansi-blue-fg">,</span> pixscale<span class="ansi-blue-fg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">    537</span>                float(W), float(H))
+
+<span class="ansi-red-fg">AttributeError</span>: &#39;NoneType&#39; object has no attribute &#39;ra&#39;
+</pre></div></div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014-2018, Kaylan Burleigh, John Moustakas.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

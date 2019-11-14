@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>obiwan docs &#8212; obiwan 1.2.0 documentation</title>
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default ">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">
+          Obiwan</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.2.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="api.html">API</a></li>
+                <li><a href="tutorials.html">Tutorials</a></li>
+                <li><a href="deeplearning.html">Deep Learning</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Pages <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">This Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Why the name <em>obiwan</em>?</a></li>
+<li><a class="reference internal" href="#install">Install</a></li>
+<li><a class="reference internal" href="#tests">Tests</a></li>
+<li><a class="reference internal" href="#developers">Developers</a></li>
+<li><a class="reference internal" href="#run-on-1000-deg2-of-sky">Run on 1000 deg2 of sky</a><ul>
+<li><a class="reference internal" href="#post-processing">Post Processing</a></li>
+<li><a class="reference internal" href="#visualizing-the-millions-of-simulated-sources-you-injected-into-the-images">Visualizing the millions of simulated sources you injected into the images</a></li>
+<li><a class="reference internal" href="#finishing-the-eboss-elg-runs">Finishing the eBOSS ELG runs</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#questions">Questions?</a></li>
+<li><a class="reference internal" href="#acknowledgements">Acknowledgements</a></li>
+<li><a class="reference internal" href="#changelog">Changelog</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="line-block">
+<div class="line"><br /></div>
+</div>
+<a class="reference internal image-reference" href="_images/obiwan_logo.png"><img alt="_images/obiwan_logo.png" class="align-center" src="_images/obiwan_logo.png" style="width: 500px;" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<p><strong>Obiwan</strong> is a Monte Carlo method for adding fake galaxies to <a class="reference external" href="http://legacysurvey.org">Legacy Survey</a> imaging data, running our <a class="reference external" href="https://github.com/legacysurvey/legacypipe">Legacypipe</a> pipeline, and repeating. The pipeline forward models sources in multi-wavelength images by detecting Signal to Noise (S/N) greater than 6 sources and minimizing the regularized L2 Loss function for various galaxy and star models.</p>
+<p>The <a class="reference external" href="http://legacysurvey.org">Legacy Survey</a> is one of the <em>first</em> open source cosmological surveys. Anyone can <a class="reference external" href="http://archive.noao.edu/search/query">download</a> the raw and calibrated images from all three telescopes within a few days of being observed. Every six months, we publicly release the results of our Legacypipe pipeline.</p>
+<p><strong>A picture is worth a 1000 words</strong></p>
+<a class="reference internal image-reference" href="_images/obiwan_1000_words.png"><img alt="_images/obiwan_1000_words.png" class="align-center" src="_images/obiwan_1000_words.png" style="width: 800px;" /></a>
+<div class="section" id="why-the-name-obiwan">
+<h1>Why the name <em>obiwan</em>?<a class="headerlink" href="#why-the-name-obiwan" title="Permalink to this headline">¶</a></h1>
+<p>Just as Obi-Wan Kenobi was the <em>only hope</em> in Star Wars: Episode IV - A New Hope (<a class="reference external" href="https://www.youtube.com/watch?v=0RDIJfoBhFU">youtube</a>); <strong>obiwan</strong>, by virtue of its Monte Carlo method, is one of the only hopes for removing all systematics in the sample of galaxies we select from the imaging data.</p>
+<p>These are commonly referred to as “imaging systematics” since they are related to image quality, the telescope, and the bias and variance of of the Legacypipe pipeline itself. The Sloan Digital Sky Survey (SDSS), showed that these “imaging systematics” could be removed by measuring correlations between the number of galaxies and image quality (namely, stellar density, seeing, galactic extinction, sky background, and photometric offsets). The situation is more complicated for the Legacy Surveys because our images come from three telescopes, and we take exposures of the same part of the sky, in multiple bands, over timescales of years. In addition, both the cosmological signal we are looking and the cameras on the telescopes we use, have physical size of about half a degree on the night sky (this is about the size of the moon seen from Earth).</p>
+</div>
+<div class="section" id="install">
+<h1>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h1>
+<p>The software stack is rather complicated. <code class="docutils literal notranslate"><span class="pre">obiwan</span></code> is a wrapper around <code class="docutils literal notranslate"><span class="pre">legacypipe</span></code>, which has many dependences. So there are two methods for installing everything.</p>
+<p><strong>1. Docker</strong></p>
+<p>Docker is the preferred method, especially for <cite>obiwan developers</cite> as you can run from your laptop and NERSC using the same Docker image. You can also run Jupyter notebooks, build the docs, etc. For using <cite>obiwan</cite> with docker see:</p>
+<ul class="simple">
+<li><a class="reference internal" href="howto/obiwan_with_docker.html"><span class="doc">obiwan with Docker</span></a></li>
+</ul>
+<p><strong>2. desiconda</strong></p>
+<p><a class="reference external" href="https://github.com/desihub/desiconda">desiconda</a>, maintained by Ted Kisner and monthly releases provided by Stephen Bailey, installs the DESI imaging and spectroscopic software using the Python package manager <cite>conda</cite>. The software is compiled specifically with the NERSC Cori and Edison supercomputers in mind. There is no simple way to install it on your laptop. For using <cite>obiwan</cite> with desiconda see:</p>
+<ul class="simple">
+<li><a class="reference internal" href="howto/obiwan_with_desiconda.html"><span class="doc">obiwan with Desiconda</span></a></li>
+</ul>
+</div>
+<div class="section" id="tests">
+<h1>Tests<a class="headerlink" href="#tests" title="Permalink to this headline">¶</a></h1>
+<p>We use Travis CI to run continuation integration tests for every <cite>git push</cite>. Because the DESI imaging pipeline has many steps it was immediately more rewarding to build “end to end tests” as opposed to unit tests. To run them do,:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">obiwan</span><span class="o">/</span><span class="n">tests</span><span class="o">/</span><span class="n">test_200x200_pixel_regions</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>This adds four simulated galaxies and/or stars to 200x200 pixel multi-color DECaLS, MzLS, and BASS images, runs <cite>legacypipe</cite>, and asserts that the measured brightness and shapes of the sources are reasonably close to the truth value.</p>
+</div>
+<div class="section" id="developers">
+<h1>Developers<a class="headerlink" href="#developers" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="howto/obiwan_with_docker.html#docs-with-docker"><span class="std std-ref">Building Documentation</span></a>: Documentation is build using the Docker image</li>
+<li><a class="reference internal" href="howto/obiwan_with_docker.html#jupyter-with-docker"><span class="std std-ref">Jupyter Notebooks</span></a>: Jupyter notebooks can be used from your laptops browser, again using the Docker image</li>
+<li><a class="reference internal" href="howto/obiwan_with_docker.html#run-a-brick-with-docker"><span class="std std-ref">Run a Brick</span></a>: Run a brick at NERSC</li>
+</ul>
+</div>
+<div class="section" id="run-on-1000-deg2-of-sky">
+<span id="id2"></span><h1>Run on 1000 deg2 of sky<a class="headerlink" href="#run-on-1000-deg2-of-sky" title="Permalink to this headline">¶</a></h1>
+<p>The recommended way for carrying out a many square degree of sky “production run” is by launching MPI jobs using <a class="reference external" href="https://bitbucket.org/berkeleylab/qdo">qdo</a> and using obiwan’s <code class="docutils literal notranslate"><span class="pre">runmanager</span></code> scripts. You do the same things whether your running with Docker images or with desiconda. See</p>
+<ul class="simple">
+<li><a class="reference internal" href="howto/run_on_1000_deg2_of_sky.html"><span class="doc">Run on 1000 deg2 of sky</span></a></li>
+</ul>
+<p>The outputs from running <cite>obiwan</cite> can be terrabytes in size, consisting of thousands of small to medium size files. To post-process and analyze these outputs see the following.</p>
+<div class="section" id="post-processing">
+<h2>Post Processing<a class="headerlink" href="#post-processing" title="Permalink to this headline">¶</a></h2>
+<p>The “data model” (the files obiwan outputs, what they contain, and the output directory structure) is described here:</p>
+<ul class="simple">
+<li><a class="reference internal" href="howto/data_model.html"><span class="doc">Data Model</span></a></li>
+</ul>
+<p>The “post-processing”, that enables later analysis and plotting, assumes the above data model and is described here:</p>
+<ul class="simple">
+<li><a class="reference internal" href="howto/post_processing.html"><span class="doc">Post Processing</span></a></li>
+</ul>
+<p>The post-processing is an mpi4py script that combines all of the obiwan outputs into a few tables that make analysis and plotting a breeze.</p>
+</div>
+<div class="section" id="visualizing-the-millions-of-simulated-sources-you-injected-into-the-images">
+<h2>Visualizing the millions of simulated sources you injected into the images<a class="headerlink" href="#visualizing-the-millions-of-simulated-sources-you-injected-into-the-images" title="Permalink to this headline">¶</a></h2>
+<p>When running obiwan you can specify <code class="docutils literal notranslate"><span class="pre">--stage</span> <span class="pre">early_coadds</span></code> which will write coadded and simulated images, on per grz-band. Doing this for all bricks is very quick because no model fitting happens. You then run some MPI scripts that go to the location of each injected source and a 64x64 pixel cutout is extracted. This whole process only takes a few hours running on a 100 nodes and you end up with literally millions of equal-size grz cutouts of the sources you injected (and, if desired, real galaxies from positions in the data release tractor catalogues). These scripts are located in <code class="docutils literal notranslate"><span class="pre">obiwan</span></code>’s deep learning module because this is how I built the training/test sets for my CNN. For how to do all this, see</p>
+<ul class="simple">
+<li><a class="reference internal" href="deeplearning.html#deep-learn-instructions"><span class="std std-ref">Make cutouts of each simulated source</span></a></li>
+</ul>
+</div>
+<div class="section" id="finishing-the-eboss-elg-runs">
+<h2>Finishing the eBOSS ELG runs<a class="headerlink" href="#finishing-the-eboss-elg-runs" title="Permalink to this headline">¶</a></h2>
+<p>People may be interested in finishing the eBOSS ELG runs presented in Ch 5 of my thesis. The instructions for <a class="reference internal" href="#run-on-1000-deg2-of-sky"><span class="std std-ref">running on a 1000 deg2 of sky</span></a> should guide you on how to do this, but here are some additional things you should know, such as where to find the eBOSS ELG outputs I created that are now saved to the NERSC tape archive. See:</p>
+<ul class="simple">
+<li><a class="reference internal" href="howto/finishing_the_eboss_elg_runs.html"><span class="doc">Additional Info for finishing the eBOSS ELG runs</span></a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="questions">
+<h1>Questions?<a class="headerlink" href="#questions" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li>desi-image-sims ‘at’ googlegroups.com</li>
+</ul>
+</div>
+<div class="section" id="acknowledgements">
+<h1>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h1>
+<p>See the <a class="reference external" href="http://legacysurvey.org/#Acknowledgements">offical acknowledgements</a> for the Legacy Survey.</p>
+</div>
+<div class="section" id="changelog">
+<h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="changes.html"><span class="doc">Change Log</span></a></li>
+</ul>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014-2018, Kaylan Burleigh, John Moustakas.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

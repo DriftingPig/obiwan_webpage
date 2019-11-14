@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Correlation Functions with Nbodykit &#8212; obiwan 1.2.0 documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default ">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          Obiwan</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.2.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../api.html">API</a></li>
+                <li><a href="../tutorials.html">Tutorials</a></li>
+                <li><a href="../deeplearning.html">Deep Learning</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Pages <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">This Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Correlation Functions with Nbodykit</a></li>
+<li><a class="reference internal" href="#Randoms-are-the-Recovered-sources">Randoms are the Recovered sources</a></li>
+<li><a class="reference internal" href="#Angular-Correlation-Function">Angular Correlation Function</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 9ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+</style>
+<div class="section" id="Correlation-Functions-with-Nbodykit">
+<h1>Correlation Functions with Nbodykit<a class="headerlink" href="#Correlation-Functions-with-Nbodykit" title="Permalink to this headline">¶</a></h1>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+
+<span class="c1"># to make this notebook&#39;s output stable across runs</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+
+<span class="c1"># To plot pretty figures</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.labelsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">14</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;xtick.labelsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">12</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;ytick.labelsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">12</span>
+
+<span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+The autoreload extension is already loaded. To reload it, use:
+  %reload_ext autoreload
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">DATA_DIR</span><span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;HOME&#39;</span><span class="p">],</span>
+                       <span class="s1">&#39;Downloads/1741p242&#39;</span><span class="p">)</span>
+
+<span class="n">simcat</span><span class="o">=</span><span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIR</span><span class="p">,</span>
+                 <span class="s1">&#39;rs0/obiwan&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;simcat-elg-1741p242.fits&#39;</span><span class="p">))[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+
+<span class="n">obitractor</span><span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIR</span><span class="p">,</span>
+                     <span class="s1">&#39;rs0/tractor&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;tractor-1741p242.fits&#39;</span><span class="p">))[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+
+<span class="n">dr5tractor</span><span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIR</span><span class="p">,</span>
+                     <span class="s1">&#39;dr5&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;tractor-1741p242.fits&#39;</span><span class="p">))[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">astropy.coordinates</span> <span class="kn">import</span> <span class="n">SkyCoord</span>
+<span class="kn">from</span> <span class="nn">astropy</span> <span class="kn">import</span> <span class="n">units</span> <span class="k">as</span> <span class="n">u</span>
+<span class="n">sim_coord</span> <span class="o">=</span> <span class="n">SkyCoord</span><span class="p">(</span><span class="n">ra</span><span class="o">=</span><span class="n">simcat</span><span class="p">[</span><span class="s1">&#39;ra&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">degree</span><span class="p">,</span>
+                        <span class="n">dec</span><span class="o">=</span><span class="n">simcat</span><span class="p">[</span><span class="s1">&#39;dec&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">degree</span><span class="p">)</span>
+<span class="n">obi_coord</span> <span class="o">=</span> <span class="n">SkyCoord</span><span class="p">(</span><span class="n">ra</span><span class="o">=</span><span class="n">obitractor</span><span class="p">[</span><span class="s1">&#39;ra&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">degree</span><span class="p">,</span>
+                     <span class="n">dec</span><span class="o">=</span><span class="n">obitractor</span><span class="p">[</span><span class="s1">&#39;dec&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">degree</span><span class="p">)</span>
+<span class="c1"># idx, d2d, d3d = .match_to_catalog_sky(catalog)</span>
+
+
+<span class="c1"># isim,itrac,d= match_radec(simcat.ra, simcat.dec, obitractor.ra, obitractor.dec,</span>
+<span class="c1">#                           1./3600.0,nearest=True)</span>
+<span class="c1"># not_isim= not_index(isim,len(simcat))</span>
+<span class="c1"># not_itrac= not_index(itrac,len(obitractor))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>sim_coord.match_to_catalog_3d<span class="o">?</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Randoms-are-the-Recovered-sources">
+<h1>Randoms are the Recovered sources<a class="headerlink" href="#Randoms-are-the-Recovered-sources" title="Permalink to this headline">¶</a></h1>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [29]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">isim</span><span class="p">,</span> <span class="n">itrac</span><span class="p">,</span> <span class="n">d2d</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">obi_coord</span><span class="o">.</span><span class="n">search_around_sky</span><span class="p">(</span><span class="n">sim_coord</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="o">*</span><span class="mf">1.</span><span class="o">/</span><span class="mi">3600</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">indices2bool</span><span class="p">(</span><span class="n">indices</span><span class="p">,</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">keep</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="nb">bool</span><span class="p">)</span>
+    <span class="n">keep</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span><span class="o">=</span><span class="bp">True</span>
+    <span class="k">return</span> <span class="n">keep</span>
+<span class="n">bsim</span><span class="o">=</span><span class="n">indices2bool</span><span class="p">(</span><span class="n">isim</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">simcat</span><span class="p">))</span>
+<span class="n">btrac</span><span class="o">=</span><span class="n">indices2bool</span><span class="p">(</span><span class="n">itrac</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">obitractor</span><span class="p">))</span>
+
+<span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">d2d</span><span class="o">*</span><span class="mi">3600</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[29]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x116076c10&gt;
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/nb_AngCorr_Func_6_1.png" src="../_images/nb_AngCorr_Func_6_1.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [30]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">recovered</span><span class="o">=</span> <span class="n">simcat</span><span class="p">[</span><span class="n">bsim</span><span class="p">]</span>
+<span class="n">real</span><span class="o">=</span> <span class="n">obitractor</span><span class="p">[</span><span class="o">~</span><span class="n">btrac</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Angular-Correlation-Function">
+<h1>Angular Correlation Function<a class="headerlink" href="#Angular-Correlation-Function" title="Permalink to this headline">¶</a></h1>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [40]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1">## Example</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [45]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">NDATA</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="c1"># randomly distributed RA/DEC on the sky</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">RandomCatalog</span><span class="p">(</span><span class="n">NDATA</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">&#39;RA&#39;</span><span class="p">]</span>  <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">110</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">260</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">&#39;DEC&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">low</span><span class="o">=-</span><span class="mf">3.6</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mf">60.</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">&#39;Weight&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+<span class="n">edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">10.</span><span class="p">,</span> <span class="mi">20</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># 20 total bins</span>
+
+<span class="c1"># run the algorithm</span>
+<span class="n">r_auto</span> <span class="o">=</span> <span class="n">AngularPairCount</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">ra</span><span class="o">=</span><span class="s1">&#39;RA&#39;</span><span class="p">,</span> <span class="n">dec</span><span class="o">=</span><span class="s1">&#39;DEC&#39;</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s1">&#39;Weight&#39;</span><span class="p">)</span>
+
+<span class="n">pc</span> <span class="o">=</span> <span class="n">r_auto</span><span class="o">.</span><span class="n">result</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pc</span><span class="p">[</span><span class="s1">&#39;theta&#39;</span><span class="p">],</span> <span class="n">pc</span><span class="p">[</span><span class="s1">&#39;npairs&#39;</span><span class="p">])</span>
+
+<span class="c1"># format the axes</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\theta$ [$\mathrm{degrees}$]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$DD(\theta)$&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">RuntimeError</span>                              Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-45-52ece9314ac0&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-intense-fg ansi-bold">      8</span>
+<span class="ansi-green-intense-fg ansi-bold">      9</span> <span class="ansi-red-fg"># run the algorithm</span>
+<span class="ansi-green-fg">---&gt; 10</span><span class="ansi-red-fg"> </span>r_auto <span class="ansi-blue-fg">=</span> AngularPairCount<span class="ansi-blue-fg">(</span>data<span class="ansi-blue-fg">,</span> edges<span class="ansi-blue-fg">,</span> ra<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;RA&#39;</span><span class="ansi-blue-fg">,</span> dec<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;DEC&#39;</span><span class="ansi-blue-fg">,</span> weight<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;Weight&#39;</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     11</span>
+<span class="ansi-green-intense-fg ansi-bold">     12</span> pc <span class="ansi-blue-fg">=</span> r_auto<span class="ansi-blue-fg">.</span>result
+
+<span class="ansi-green-fg">/Users/kaylan1/miniconda3/lib/python2.7/site-packages/nbodykit/algorithms/survey_paircount.pyc</span> in <span class="ansi-cyan-fg">__init__</span><span class="ansi-blue-fg">(self, first, edges, second, ra, dec, weight, show_progress, **config)</span>
+<span class="ansi-green-intense-fg ansi-bold">    365</span>
+<span class="ansi-green-intense-fg ansi-bold">    366</span>         <span class="ansi-red-fg"># run the algorithm</span>
+<span class="ansi-green-fg">--&gt; 367</span><span class="ansi-red-fg">         </span>self<span class="ansi-blue-fg">.</span>run<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    368</span>
+<span class="ansi-green-intense-fg ansi-bold">    369</span>     <span class="ansi-green-fg">def</span> __setstate__<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> state<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+
+<span class="ansi-green-fg">/Users/kaylan1/miniconda3/lib/python2.7/site-packages/nbodykit/algorithms/survey_paircount.pyc</span> in <span class="ansi-cyan-fg">run</span><span class="ansi-blue-fg">(self)</span>
+<span class="ansi-green-intense-fg ansi-bold">    423</span>         <span class="ansi-red-fg"># run</span>
+<span class="ansi-green-intense-fg ansi-bold">    424</span>         sizes <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>comm<span class="ansi-blue-fg">.</span>allgather<span class="ansi-blue-fg">(</span>len<span class="ansi-blue-fg">(</span>pos1<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">--&gt; 425</span><span class="ansi-red-fg">         </span>pc <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>_run<span class="ansi-blue-fg">(</span>DDtheta_mocks<span class="ansi-blue-fg">,</span> kws<span class="ansi-blue-fg">,</span> sizes<span class="ansi-blue-fg">,</span> callback<span class="ansi-blue-fg">=</span>callback<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    426</span>
+<span class="ansi-green-intense-fg ansi-bold">    427</span>         <span class="ansi-red-fg"># sum results over all ranks</span>
+
+<span class="ansi-green-fg">/Users/kaylan1/miniconda3/lib/python2.7/site-packages/nbodykit/algorithms/sim_paircount.pyc</span> in <span class="ansi-cyan-fg">_run</span><span class="ansi-blue-fg">(self, func, kwargs, loads, callback)</span>
+<span class="ansi-green-intense-fg ansi-bold">    264</span>         chunks <span class="ansi-blue-fg">=</span> numpy<span class="ansi-blue-fg">.</span>array_split<span class="ansi-blue-fg">(</span>range<span class="ansi-blue-fg">(</span>loads<span class="ansi-blue-fg">[</span>self<span class="ansi-blue-fg">.</span>comm<span class="ansi-blue-fg">.</span>rank<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> N<span class="ansi-blue-fg">,</span> axis<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    265</span>         <span class="ansi-green-fg">for</span> i<span class="ansi-blue-fg">,</span> chunk <span class="ansi-green-fg">in</span> enumerate<span class="ansi-blue-fg">(</span>chunks<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 266</span><span class="ansi-red-fg">             </span>this_pc <span class="ansi-blue-fg">=</span> run<span class="ansi-blue-fg">(</span>chunk<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    267</span>             <span class="ansi-green-fg">if</span> self<span class="ansi-blue-fg">.</span>comm<span class="ansi-blue-fg">.</span>rank <span class="ansi-blue-fg">==</span> largest_load<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    268</span>                 self<span class="ansi-blue-fg">.</span>logger<span class="ansi-blue-fg">.</span>info<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#34;%d%% done&#34;</span> <span class="ansi-blue-fg">%</span> <span class="ansi-blue-fg">(</span>N<span class="ansi-blue-fg">*</span><span class="ansi-blue-fg">(</span>i<span class="ansi-blue-fg">+</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">/Users/kaylan1/miniconda3/lib/python2.7/site-packages/nbodykit/algorithms/sim_paircount.pyc</span> in <span class="ansi-cyan-fg">run</span><span class="ansi-blue-fg">(chunk)</span>
+<span class="ansi-green-intense-fg ansi-bold">    250</span>             <span class="ansi-green-fg">if</span> callback <span class="ansi-green-fg">is</span> <span class="ansi-green-fg">not</span> None<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    251</span>                 callback<span class="ansi-blue-fg">(</span>kwargs<span class="ansi-blue-fg">,</span> chunk<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">--&gt; 252</span><span class="ansi-red-fg">             </span><span class="ansi-green-fg">return</span> self<span class="ansi-blue-fg">.</span>_run_corrfunc<span class="ansi-blue-fg">(</span>func<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    253</span>
+<span class="ansi-green-intense-fg ansi-bold">    254</span>         <span class="ansi-red-fg"># log the function start</span>
+
+<span class="ansi-green-fg">/Users/kaylan1/miniconda3/lib/python2.7/site-packages/nbodykit/algorithms/sim_paircount.pyc</span> in <span class="ansi-cyan-fg">_run_corrfunc</span><span class="ansi-blue-fg">(self, func, **kws)</span>
+<span class="ansi-green-intense-fg ansi-bold">    298</span>             msg <span class="ansi-blue-fg">+=</span> <span class="ansi-blue-fg">&#34;stdout: %s\n&#34;</span> <span class="ansi-blue-fg">%</span> stdout
+<span class="ansi-green-intense-fg ansi-bold">    299</span>             msg <span class="ansi-blue-fg">+=</span> <span class="ansi-blue-fg">&#34;stderr: %s&#34;</span> <span class="ansi-blue-fg">%</span> stderr
+<span class="ansi-green-fg">--&gt; 300</span><span class="ansi-red-fg">             </span><span class="ansi-green-fg">raise</span> RuntimeError<span class="ansi-blue-fg">(</span>msg<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    301</span>
+<span class="ansi-green-intense-fg ansi-bold">    302</span>         <span class="ansi-green-fg">return</span> CorrfuncResult<span class="ansi-blue-fg">(</span>result<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-red-fg">RuntimeError</span>: calling the function &#39;Corrfunc.mocks.DDtheta_mocks.DDtheta_mocks&#39; failed:
+exception: Could not import the C extension for the angular correlation function for mocks.
+stdout:
+stderr:
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [41]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">nbodykit.source.catalog.array</span> <span class="kn">import</span> <span class="n">ArrayCatalog</span><span class="p">,</span><span class="n">RandomCatalog</span>
+<span class="n">recovered</span><span class="o">=</span> <span class="n">ArrayCatalog</span><span class="p">(</span><span class="n">simcat</span><span class="p">[</span><span class="n">bsim</span><span class="p">])</span>
+<span class="n">real</span><span class="o">=</span> <span class="n">ArrayCatalog</span><span class="p">(</span><span class="n">obitractor</span><span class="p">[</span><span class="o">~</span><span class="n">btrac</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">ImportError</span>                               Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-41-acde3c3842fc&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">from</span> nbodykit<span class="ansi-blue-fg">.</span>source<span class="ansi-blue-fg">.</span>catalog<span class="ansi-blue-fg">.</span>array <span class="ansi-green-fg">import</span> ArrayCatalog<span class="ansi-blue-fg">,</span>RandomCatalog
+<span class="ansi-green-intense-fg ansi-bold">      2</span> recovered<span class="ansi-blue-fg">=</span> ArrayCatalog<span class="ansi-blue-fg">(</span>simcat<span class="ansi-blue-fg">[</span>bsim<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">      3</span> real<span class="ansi-blue-fg">=</span> ArrayCatalog<span class="ansi-blue-fg">(</span>obitractor<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">~</span>btrac<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-red-fg">ImportError</span>: cannot import name RandomCatalog
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [42]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># compute the cross correlation pair counts</span>
+<span class="kn">from</span> <span class="nn">nbodykit.lab</span> <span class="kn">import</span> <span class="n">AngularPairCount</span><span class="p">,</span><span class="n">RandomCatalog</span>
+<span class="n">edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.25</span><span class="o">/</span><span class="mf">1e2</span><span class="p">,</span><span class="mf">0.25</span><span class="o">/</span><span class="mf">1e1</span><span class="p">,</span><span class="mi">20</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">r_cross</span> <span class="o">=</span> <span class="n">AngularPairCount</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">ra</span><span class="o">=</span><span class="s1">&#39;ra&#39;</span><span class="p">,</span> <span class="n">dec</span><span class="o">=</span><span class="s1">&#39;dec&#39;</span><span class="p">,</span>
+                           <span class="n">second</span><span class="o">=</span><span class="n">recovered</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">RuntimeError</span>                              Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-42-a66451d4a86e&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-intense-fg ansi-bold">      3</span> edges <span class="ansi-blue-fg">=</span> np<span class="ansi-blue-fg">.</span>linspace<span class="ansi-blue-fg">(</span><span class="ansi-cyan-fg">0.25</span><span class="ansi-blue-fg">/</span><span class="ansi-cyan-fg">1e2</span><span class="ansi-blue-fg">,</span><span class="ansi-cyan-fg">0.25</span><span class="ansi-blue-fg">/</span><span class="ansi-cyan-fg">1e1</span><span class="ansi-blue-fg">,</span><span class="ansi-cyan-fg">20</span><span class="ansi-blue-fg">+</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">      4</span> r_cross = AngularPairCount(real, edges, ra=&#39;ra&#39;, dec=&#39;dec&#39;,
+<span class="ansi-green-fg">----&gt; 5</span><span class="ansi-red-fg">                            second=recovered)
+</span>
+<span class="ansi-green-fg">/Users/kaylan1/miniconda3/lib/python2.7/site-packages/nbodykit/algorithms/survey_paircount.pyc</span> in <span class="ansi-cyan-fg">__init__</span><span class="ansi-blue-fg">(self, first, edges, second, ra, dec, weight, show_progress, **config)</span>
+<span class="ansi-green-intense-fg ansi-bold">    365</span>
+<span class="ansi-green-intense-fg ansi-bold">    366</span>         <span class="ansi-red-fg"># run the algorithm</span>
+<span class="ansi-green-fg">--&gt; 367</span><span class="ansi-red-fg">         </span>self<span class="ansi-blue-fg">.</span>run<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    368</span>
+<span class="ansi-green-intense-fg ansi-bold">    369</span>     <span class="ansi-green-fg">def</span> __setstate__<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> state<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+
+<span class="ansi-green-fg">/Users/kaylan1/miniconda3/lib/python2.7/site-packages/nbodykit/algorithms/survey_paircount.pyc</span> in <span class="ansi-cyan-fg">run</span><span class="ansi-blue-fg">(self)</span>
+<span class="ansi-green-intense-fg ansi-bold">    423</span>         <span class="ansi-red-fg"># run</span>
+<span class="ansi-green-intense-fg ansi-bold">    424</span>         sizes <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>comm<span class="ansi-blue-fg">.</span>allgather<span class="ansi-blue-fg">(</span>len<span class="ansi-blue-fg">(</span>pos1<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">--&gt; 425</span><span class="ansi-red-fg">         </span>pc <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>_run<span class="ansi-blue-fg">(</span>DDtheta_mocks<span class="ansi-blue-fg">,</span> kws<span class="ansi-blue-fg">,</span> sizes<span class="ansi-blue-fg">,</span> callback<span class="ansi-blue-fg">=</span>callback<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    426</span>
+<span class="ansi-green-intense-fg ansi-bold">    427</span>         <span class="ansi-red-fg"># sum results over all ranks</span>
+
+<span class="ansi-green-fg">/Users/kaylan1/miniconda3/lib/python2.7/site-packages/nbodykit/algorithms/sim_paircount.pyc</span> in <span class="ansi-cyan-fg">_run</span><span class="ansi-blue-fg">(self, func, kwargs, loads, callback)</span>
+<span class="ansi-green-intense-fg ansi-bold">    264</span>         chunks <span class="ansi-blue-fg">=</span> numpy<span class="ansi-blue-fg">.</span>array_split<span class="ansi-blue-fg">(</span>range<span class="ansi-blue-fg">(</span>loads<span class="ansi-blue-fg">[</span>self<span class="ansi-blue-fg">.</span>comm<span class="ansi-blue-fg">.</span>rank<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> N<span class="ansi-blue-fg">,</span> axis<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    265</span>         <span class="ansi-green-fg">for</span> i<span class="ansi-blue-fg">,</span> chunk <span class="ansi-green-fg">in</span> enumerate<span class="ansi-blue-fg">(</span>chunks<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 266</span><span class="ansi-red-fg">             </span>this_pc <span class="ansi-blue-fg">=</span> run<span class="ansi-blue-fg">(</span>chunk<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    267</span>             <span class="ansi-green-fg">if</span> self<span class="ansi-blue-fg">.</span>comm<span class="ansi-blue-fg">.</span>rank <span class="ansi-blue-fg">==</span> largest_load<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    268</span>                 self<span class="ansi-blue-fg">.</span>logger<span class="ansi-blue-fg">.</span>info<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#34;%d%% done&#34;</span> <span class="ansi-blue-fg">%</span> <span class="ansi-blue-fg">(</span>N<span class="ansi-blue-fg">*</span><span class="ansi-blue-fg">(</span>i<span class="ansi-blue-fg">+</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">/Users/kaylan1/miniconda3/lib/python2.7/site-packages/nbodykit/algorithms/sim_paircount.pyc</span> in <span class="ansi-cyan-fg">run</span><span class="ansi-blue-fg">(chunk)</span>
+<span class="ansi-green-intense-fg ansi-bold">    250</span>             <span class="ansi-green-fg">if</span> callback <span class="ansi-green-fg">is</span> <span class="ansi-green-fg">not</span> None<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    251</span>                 callback<span class="ansi-blue-fg">(</span>kwargs<span class="ansi-blue-fg">,</span> chunk<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">--&gt; 252</span><span class="ansi-red-fg">             </span><span class="ansi-green-fg">return</span> self<span class="ansi-blue-fg">.</span>_run_corrfunc<span class="ansi-blue-fg">(</span>func<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    253</span>
+<span class="ansi-green-intense-fg ansi-bold">    254</span>         <span class="ansi-red-fg"># log the function start</span>
+
+<span class="ansi-green-fg">/Users/kaylan1/miniconda3/lib/python2.7/site-packages/nbodykit/algorithms/sim_paircount.pyc</span> in <span class="ansi-cyan-fg">_run_corrfunc</span><span class="ansi-blue-fg">(self, func, **kws)</span>
+<span class="ansi-green-intense-fg ansi-bold">    298</span>             msg <span class="ansi-blue-fg">+=</span> <span class="ansi-blue-fg">&#34;stdout: %s\n&#34;</span> <span class="ansi-blue-fg">%</span> stdout
+<span class="ansi-green-intense-fg ansi-bold">    299</span>             msg <span class="ansi-blue-fg">+=</span> <span class="ansi-blue-fg">&#34;stderr: %s&#34;</span> <span class="ansi-blue-fg">%</span> stderr
+<span class="ansi-green-fg">--&gt; 300</span><span class="ansi-red-fg">             </span><span class="ansi-green-fg">raise</span> RuntimeError<span class="ansi-blue-fg">(</span>msg<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    301</span>
+<span class="ansi-green-intense-fg ansi-bold">    302</span>         <span class="ansi-green-fg">return</span> CorrfuncResult<span class="ansi-blue-fg">(</span>result<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-red-fg">RuntimeError</span>: calling the function &#39;Corrfunc.mocks.DDtheta_mocks.DDtheta_mocks&#39; failed:
+exception: Could not import the C extension for the angular correlation function for mocks.
+stdout:
+stderr:
+</pre></div></div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014-2018, Kaylan Burleigh, John Moustakas.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
